@@ -1,4 +1,4 @@
-from ...errors import ExpectationNotMetError, ExpectNotUnderstoodError
+from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
 
 def test_record(self, record, suppress_errors: bool = False):
     self.metrics_collector.add(record)
