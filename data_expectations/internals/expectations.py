@@ -23,7 +23,7 @@ import inspect
 from functools import lru_cache
 from typing import Any, Iterable
 from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
-from .internals import sql_like_to_regex, build_regex
+from .text import sql_like_to_regex, build_regex
 from ..measures.collector import MeasuresCollector
 
 

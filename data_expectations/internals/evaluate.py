@@ -1,6 +1,6 @@
 from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
 
-def test_record(self, record, suppress_errors: bool = False):
+def evaluate_record(self, record, suppress_errors: bool = False):
     self.metrics_collector.add(record)
     full_suite = self._available_expectations()
     for expectation in self.set_of_expectations:

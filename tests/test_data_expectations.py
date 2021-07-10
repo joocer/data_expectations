@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-import data.expectations as de
+import data_expectations as de
 from rich import traceback
 
 traceback.install()
@@ -37,7 +37,7 @@ def test_expectation():
     }
 
     test = de.Expectations(set_of_expectations)
-    assert de.evaluate.test_record(test, TEST_DATA)
+    assert de.evaluate_record(test, TEST_DATA)
 
     print(test.metrics_collector.collector)
 
