@@ -22,7 +22,6 @@ of all of the values in a table.
 import inspect
 from functools import lru_cache
 from typing import Any, Iterable
-from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
 from .text import sql_like_to_regex, build_regex
 from ..measures.collector import MeasuresCollector
 
@@ -36,14 +35,36 @@ class Expectations(object):
     # COLUMN EXPECTATIONS
     ###################################################################################
 
-    def expect_column_to_exist(self, *, row: dict, column: str, **kwargs):
-        """Confirms that a named column exists."""
+    def expect_column_to_exist(
+        self,
+        *,
+        row: dict,
+        column: str,
+        **kwargs,
+    ):
+        """
+        Confirms that a named column exists.
+
+        Paramters:
+            row: dictionary
+                The dictionary to be tested
+            column: string
+                The name of the column we expect to exist
+
+        Returns:
+            True if the expectation is met
+        """
         if isinstance(row, dict):
             return column in row.keys()
         return False
 
     def expect_columns_to_match_set(
-        self, *, row: dict, columns, ignore_excess: bool = True, **kwargs
+        self,
+        *,
+        row: dict,
+        columns: list,
+        ignore_excess: bool = True,
+        **kwargs,
     ):
         """
         Confirms that the columns in a record matches a given set.
@@ -56,7 +77,13 @@ class Expectations(object):
         else:
             return sorted(columns) == sorted(list(row.keys()))
 
-    def expect_column_values_to_not_be_null(self, *, row: dict, column: str, **kwargs):
+    def expect_column_values_to_not_be_null(
+        self,
+        *,
+        row: dict,
+        column: str,
+        **kwargs,
+    ):
         """Confirms the value in a column is not null"""
         return row.get(column) is not None
 
@@ -89,7 +116,12 @@ class Expectations(object):
         return ignore_nulls
 
     def expect_column_values_to_be_unique(
-        self, *, row: dict, column: str, ignore_nulls: bool = True, **kwargs
+        self,
+        *,
+        row: dict,
+        column: str,
+        ignore_nulls: bool = True,
+        **kwargs,
     ):
         raise NotImplementedError()
 
@@ -109,12 +141,22 @@ class Expectations(object):
         return ignore_nulls
 
     def expect_column_values_to_be_increasing(
-        self, *, row: dict, column: str, ignore_nulls: bool = True, **kwargs
+        self,
+        *,
+        row: dict,
+        column: str,
+        ignore_nulls: bool = True,
+        **kwargs,
     ):
         raise NotImplementedError()
 
     def expect_column_values_to_be_decreasing(
-        self, *, row: dict, column: str, ignore_nulls: bool = True, **kwargs
+        self,
+        *,
+        row: dict,
+        column: str,
+        ignore_nulls: bool = True,
+        **kwargs,
     ):
         raise NotImplementedError()
 
@@ -133,7 +175,13 @@ class Expectations(object):
         return ignore_nulls
 
     def expect_column_values_to_match_regex(
-        self, *, row: dict, column: str, regex: str, ignore_nulls: bool = True, **kwargs
+        self,
+        *,
+        row: dict,
+        column: str,
+        regex: str,
+        ignore_nulls: bool = True,
+        **kwargs,
     ):
         value = row.get(column)
         if value:
@@ -141,7 +189,13 @@ class Expectations(object):
         return ignore_nulls
 
     def expect_column_values_to_match_like(
-        self, *, row: dict, column: str, like: str, ignore_nulls: bool = True, **kwargs
+        self,
+        *,
+        row: dict,
+        column: str,
+        like: str,
+        ignore_nulls: bool = True,
+        **kwargs,
     ):
         value = row.get(column)
         if value:
@@ -182,21 +236,40 @@ class Expectations(object):
     # TABLE EXPECTATIONS
     ###################################################################################
 
-    def expect_table_row_count_to_be(self, *, dataset, count: int, **kwargs):
+    def expect_table_row_count_to_be(
+        self,
+        *,
+        dataset,
+        count: int,
+        **kwargs,
+    ):
         raise NotImplementedError()
 
     def expect_table_row_count_to_be_between(
-        self, *, dataset, minimum: int, maximum: int, **kwargs
+        self,
+        *,
+        dataset,
+        minimum: int,
+        maximum: int,
+        **kwargs,
     ):
         raise NotImplementedError()
 
     def expect_table_row_count_to_be_more_than(
-        self, *, dataset, minimum: int, **kwargs
+        self,
+        *,
+        dataset,
+        minimum: int,
+        **kwargs,
     ):
         raise NotImplementedError()
 
     def expect_table_row_count_to_be_less_than(
-        self, *, dataset, maximum: int, **kwargs
+        self,
+        *,
+        dataset,
+        maximum: int,
+        **kwargs,
     ):
         raise NotImplementedError()
 
