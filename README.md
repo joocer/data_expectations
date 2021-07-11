@@ -14,4 +14,4 @@ is `column_values_are_increasing`. Most of the time you don't need to know _how_
 got like that, you are only interested _what_ the data looks like.
 
 
-> if data doesn't match, I'm not cross, I'm just disappointed.
+> if data doesn't match, I'm not angry, I'm just disappointed.
