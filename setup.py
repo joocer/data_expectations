@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages  # type:ignore
 
-with open("src/version.py", "r") as v:
+with open("data_expectations/version.py", "r") as v:
     vers = v.read()
 exec(vers)  # nosec
 
@@ -14,7 +14,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     maintainer="Joocer",
-    packages=find_packages(include=["src", "src.*"]),
-    url="https://github.com/joocer/data-expectations",
+    packages=find_packages(include=["data_expectations", "data_expectations.*"]),
+    url="https://github.com/joocer/data_expectations",
     install_requires=[],
 )
