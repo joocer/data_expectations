@@ -59,7 +59,7 @@ class Expectations(object):
             return column in row.keys()
         return False
 
-    def expect_columns_to_match_set(
+    def expect_column_names_to_match_set(
         self,
         *,
         row: dict,
@@ -156,7 +156,13 @@ class Expectations(object):
         ignore_nulls: bool = True,
         **kwargs,
     ):
-        raise NotImplementedError()
+        value = row.get(column)
+        if value:
+            key = f"expect_column_values_to_be_decreasing/{str(column)}"
+            last_value = self._tracker.get(key)
+            self._tracker[key] = value
+            return last_value is None or last_value >= value
+        return ignore_nulls
 
     def expect_column_values_to_be_in_set(
         self,
