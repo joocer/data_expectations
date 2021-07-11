@@ -144,7 +144,7 @@ class Expectations(object):
             key = f"expect_column_values_to_be_increasing/{str(column)}"
             last_value = self._tracker.get(key)
             self._tracker[key] = value
-            return last_value is not None and last_value <= value
+            return last_value is None or last_value <= value
         return ignore_nulls
         
 
