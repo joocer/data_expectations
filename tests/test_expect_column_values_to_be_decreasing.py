@@ -61,6 +61,7 @@ def test_expect_column_values_to_be_decreasing_valid_with_nulls():
         assert test_func(row=row, column="number")
         assert test_func(row=row, column="string")
 
+
 def test_expect_column_values_to_be_decreasing_valid_with_nulls_which_arent_ignored():
 
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
@@ -87,13 +88,14 @@ def test_expect_column_values_to_be_decreasing_invalid():
             assert not test_func(row=row, column="number")
             assert not test_func(row=row, column="string")
 
+
 def test_expect_column_values_to_be_decreasing_invalid_with_nulls():
 
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
 
     # invalid data is valid the first cycle
     for i, row in enumerate(INVALID_DATA_SPARSE):
-        if i in (0,1):
+        if i in (0, 1):
             assert test_func(row=row, column="number")
             assert test_func(row=row, column="string")
         else:

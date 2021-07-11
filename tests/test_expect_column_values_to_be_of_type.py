@@ -20,7 +20,9 @@ def test_expect_column_values_to_be_of_type():
     assert test_func(row={"key": True}, column="key", expected_type="bool")
     assert test_func(row={"key": 0.1}, column="key", expected_type="float")
 
-    assert test_func(row={"key": None}, column="key", expected_type="str", ignore_nulls=True)
+    assert test_func(
+        row={"key": None}, column="key", expected_type="str", ignore_nulls=True
+    )
     assert test_func(row={}, column="key", expected_type="str", ignore_nulls=True)
 
 

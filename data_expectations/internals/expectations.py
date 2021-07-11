@@ -42,7 +42,7 @@ class Expectations(object):
     def __init__(self, set_of_expectations: Iterable[dict]):
         self.set_of_expectations = set_of_expectations
         self.metrics_collector = MeasuresCollector()
-        self._tracker:dict = {}
+        self._tracker: dict = {}
 
     ###################################################################################
     # COLUMN EXPECTATIONS
@@ -161,7 +161,6 @@ class Expectations(object):
             self._tracker[key] = value
             return last_value is None or last_value <= value
         return ignore_nulls
-        
 
     def expect_column_values_to_be_decreasing(
         self,
@@ -250,7 +249,6 @@ class Expectations(object):
         if value:
             return len(value) >= minimum and len(value) <= maximum
         return ignore_nulls
-
 
     @lru_cache(1)
     def _available_expectations(self):
