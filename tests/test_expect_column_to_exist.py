@@ -25,6 +25,8 @@ def test_expect_column_to_exist():
 
     test_func = de.Expectations([]).expect_column_to_exist
 
+    assert not test_func(row="{\"number\":1}", column="number")
+
     for i, row in enumerate(DATA):
         assert test_func(row=row, column="number"), row
         if i in (3,):
