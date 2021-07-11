@@ -20,7 +20,7 @@ jobs:
           pip install --upgrade bandit
 
       - name: Execute Test
-        run: bandit -r mabel
+        run: bandit -r data_expectations
 
   semgrep:
     runs-on: ubuntu-latest

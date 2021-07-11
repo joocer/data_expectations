@@ -3,7 +3,7 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-from src.expectations import Expectations
+import data_expectations as de
 from rich import traceback
 
 traceback.install()
@@ -17,7 +17,7 @@ set_of_expectations = [
 ]
 
 print(
-    Expectations([]).expect_column_values_to_match_like(
+    de.Expectations([]).expect_column_values_to_match_like(
         row={"a": "anakin skywalker"}, column="a", like="an%ker"
     )
 )
@@ -36,8 +36,8 @@ def test_expectation():
         "enum_field": "RED",
     }
 
-    test = Expectations(set_of_expectations)
-    assert test.test_record(TEST_DATA)
+    test = de.Expectations(set_of_expectations)
+    assert de.evaluate_record(test, TEST_DATA)
 
     print(test.metrics_collector.collector)
 
