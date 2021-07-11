@@ -30,7 +30,7 @@ class Expectations(object):
     def __init__(self, set_of_expectations: Iterable[dict]):
         self.set_of_expectations = set_of_expectations
         self.metrics_collector = MeasuresCollector()
-        self._tracker = {}
+        self._tracker:dict = {}
 
     ###################################################################################
     # COLUMN EXPECTATIONS

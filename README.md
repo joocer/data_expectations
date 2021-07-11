@@ -15,10 +15,9 @@ A delarative approach to asserting qualities of your datasets. Instead of tests 
 `column_values_are_increasing`. Most of the time you don't need to know _how_ it got
 like that, you are only interested _what_ the data looks like.
 
-These expectations can be used in place of a schema (we can expect a set of columns,
-each with an expected type), but they also allow us to have more complex assertions,
-such as the value in a column is always greater than another, or the values in a column
-are increasing.
+Expectations can be used alongside, or in place of a schema validator, however they
+are not intended to perform validation of the data in a dataset, not just the structure
+of a table. 
 
 ## Expectations
 
