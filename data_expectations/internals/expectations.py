@@ -30,6 +30,7 @@ class Expectations(object):
     def __init__(self, set_of_expectations: Iterable[dict]):
         self.set_of_expectations = set_of_expectations
         self.metrics_collector = MeasuresCollector()
+        self._tracker = {}
 
     ###################################################################################
     # COLUMN EXPECTATIONS
@@ -115,16 +116,6 @@ class Expectations(object):
             return type(value).__name__ in type_list
         return ignore_nulls
 
-    def expect_column_values_to_be_unique(
-        self,
-        *,
-        row: dict,
-        column: str,
-        ignore_nulls: bool = True,
-        **kwargs,
-    ):
-        raise NotImplementedError()
-
     def expect_column_values_to_be_between(
         self,
         *,
@@ -148,7 +139,14 @@ class Expectations(object):
         ignore_nulls: bool = True,
         **kwargs,
     ):
-        raise NotImplementedError()
+        value = row.get(column)
+        if value:
+            key = f"expect_column_values_to_be_increasing/{str(column)}"
+            last_value = self._tracker.get(key)
+            self._tracker[key] = value
+            return last_value is not None and last_value <= value
+        return ignore_nulls
+        
 
     def expect_column_values_to_be_decreasing(
         self,
@@ -231,6 +229,16 @@ class Expectations(object):
         if value:
             return len(value) >= minimum and len(value) <= maximum
         return ignore_nulls
+
+    def expect_column_values_to_be_unique(
+        self,
+        *,
+        row: dict,
+        column: str,
+        ignore_nulls: bool = True,
+        **kwargs,
+    ):
+        raise NotImplementedError()
 
     ###################################################################################
     # TABLE EXPECTATIONS
