@@ -19,6 +19,10 @@ Expectations can be used alongside, or in place of a schema validator, however t
 are not intended to perform validation of the data in a dataset, not just the structure
 of a table. 
 
+```diff
+! Data Expectations is in Alpha - interface and usage patterns are being stablized
+```
+
 ## Expectations
 
 - expect_column_to_exist
@@ -27,9 +31,6 @@ of a table.
 - expect_column_values_to_be_of_type
 - expect_column_values_to_be_in_type_list
 - expect_column_values_to_be_between
-* expect_column_values_to_be_more_than
-* expect_column_values_to_be_less_than
-* expect_column_a_value_to_be_more_than_column_b_value
 - expect_column_values_to_be_increasing
 - expect_column_values_to_be_decreasing
 - expect_column_values_to_be_in_set

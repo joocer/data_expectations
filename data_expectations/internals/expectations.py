@@ -17,6 +17,18 @@ in a flow - as such it is not intended to test an entire dataset at once to test
 validity, and some assertions are impractical - for example an expectation of the mean
 of all of the values in a table.
 
+To Be Added
+* expect_column_values_to_be_more_than
+* expect_column_values_to_be_less_than
+* expect_column_a_value_to_be_more_than_column_b_value
+
+* expect_table_row_count_to_be_less_than
+* expect_table_row_count_to_be_more_than
+* expect_table_row_count_to_be_between
+* expect_table_row_count_to_be
+* expect_column_values_to_be_unique
+
+
 - if data doesn't match, I'm not cross, I'm just disappointed.
 """
 import inspect
@@ -239,56 +251,6 @@ class Expectations(object):
             return len(value) >= minimum and len(value) <= maximum
         return ignore_nulls
 
-    def expect_column_values_to_be_unique(
-        self,
-        *,
-        row: dict,
-        column: str,
-        ignore_nulls: bool = True,
-        **kwargs,
-    ):
-        raise NotImplementedError()
-
-    ###################################################################################
-    # TABLE EXPECTATIONS
-    ###################################################################################
-
-    def expect_table_row_count_to_be(
-        self,
-        *,
-        dataset,
-        count: int,
-        **kwargs,
-    ):
-        raise NotImplementedError()
-
-    def expect_table_row_count_to_be_between(
-        self,
-        *,
-        dataset,
-        minimum: int,
-        maximum: int,
-        **kwargs,
-    ):
-        raise NotImplementedError()
-
-    def expect_table_row_count_to_be_more_than(
-        self,
-        *,
-        dataset,
-        minimum: int,
-        **kwargs,
-    ):
-        raise NotImplementedError()
-
-    def expect_table_row_count_to_be_less_than(
-        self,
-        *,
-        dataset,
-        maximum: int,
-        **kwargs,
-    ):
-        raise NotImplementedError()
 
     @lru_cache(1)
     def _available_expectations(self):
