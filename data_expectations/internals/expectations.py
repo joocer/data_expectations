@@ -48,6 +48,26 @@ class Expectations(object):
     # COLUMN EXPECTATIONS
     ###################################################################################
 
+    def expect_column_names_to_match_set(
+        self,
+        *,
+        row: dict,
+        columns: list,
+        ignore_excess: bool = True,
+        **kwargs,
+    ):
+        """
+        Confirms that the columns in a record matches a given set.
+
+        Ignore_excess, ignore columns not on the list, set to False to test against a
+        fixed set.
+        """
+        if ignore_excess:
+            return all(key in columns for key in row.keys())
+        else:
+            return sorted(columns) == sorted(list(row.keys()))
+
+
     def expect_column_to_exist(
         self,
         *,
@@ -70,25 +90,6 @@ class Expectations(object):
         if isinstance(row, dict):
             return column in row.keys()
         return False
-
-    def expect_column_names_to_match_set(
-        self,
-        *,
-        row: dict,
-        columns: list,
-        ignore_excess: bool = True,
-        **kwargs,
-    ):
-        """
-        Confirms that the columns in a record matches a given set.
-
-        Ignore_excess, ignore columns not on the list, set to False to test against a
-        fixed set.
-        """
-        if ignore_excess:
-            return all(key in columns for key in row.keys())
-        else:
-            return sorted(columns) == sorted(list(row.keys()))
 
     def expect_column_values_to_not_be_null(
         self,

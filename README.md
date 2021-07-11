@@ -5,6 +5,10 @@ _Is your data meeting your expectations?_
 
 ----
 
+~~~diff
+Data Expectations is in Alpha - interface and usage patterns are being stablized
+~~~
+
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/joocer/data_expectations/blob/main/LICENSE)
 [![Status](https://img.shields.io/badge/status-alpha-yellowgreen)](https://github.com/joocer/data_expectations)
 [![Regression Suite](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml)
@@ -21,10 +25,6 @@ like that, you are only interested _what_ the data looks like.
 Expectations can be used alongside, or in place of a schema validator, however they
 are not intended to perform validation of the data in a dataset, not just the structure
 of a table. 
-
-```diff
-! Data Expectations is in Alpha - interface and usage patterns are being stablized
-```
 
 ## Expectations
 
