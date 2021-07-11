@@ -5,6 +5,9 @@ Is your data meeting your expectations?
 
 ----
 
+[![Regression Suite](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml)
+[![Static Analysis](https://github.com/joocer/data_expectations/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/static_analysis.yml)
+
 A delarative approach to asserting qualities of your datasets. For example, instead
 of a test such as `is_sorted` to determine if a column is ordered, the expectation
 is `column_values_are_increasing`. Most of the time you don't need to know _how_ it
