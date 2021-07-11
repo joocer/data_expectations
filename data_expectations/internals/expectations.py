@@ -85,7 +85,10 @@ class Expectations(object):
         column: str,
         **kwargs,
     ):
-        """Confirms the value in a column is not null"""
+        """
+        Confirms the value in a column is not null, note that non-existant values
+        are considered to be null.
+        """
         return row.get(column) is not None
 
     def expect_column_values_to_be_of_type(
