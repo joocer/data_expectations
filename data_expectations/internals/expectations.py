@@ -67,7 +67,6 @@ class Expectations(object):
         else:
             return sorted(columns) == sorted(list(row.keys()))
 
-
     def expect_column_to_exist(
         self,
         *,
