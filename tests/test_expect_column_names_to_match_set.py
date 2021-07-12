@@ -1,6 +1,3 @@
-"""
-Expectation: Column To Exist
-"""
 import os
 import sys
 
@@ -36,7 +33,7 @@ def test_expect_column_names_to_match_set():
     )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_names_to_match_set()
 

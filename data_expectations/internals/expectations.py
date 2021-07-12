@@ -48,6 +48,25 @@ class Expectations(object):
     # COLUMN EXPECTATIONS
     ###################################################################################
 
+    def expect_column_names_to_match_set(
+        self,
+        *,
+        row: dict,
+        columns: list,
+        ignore_excess: bool = True,
+        **kwargs,
+    ):
+        """
+        Confirms that the columns in a record matches a given set.
+
+        Ignore_excess, ignore columns not on the list, set to False to test against a
+        fixed set.
+        """
+        if ignore_excess:
+            return all(key in columns for key in row.keys())
+        else:
+            return sorted(columns) == sorted(list(row.keys()))
+
     def expect_column_to_exist(
         self,
         *,
@@ -70,25 +89,6 @@ class Expectations(object):
         if isinstance(row, dict):
             return column in row.keys()
         return False
-
-    def expect_column_names_to_match_set(
-        self,
-        *,
-        row: dict,
-        columns: list,
-        ignore_excess: bool = True,
-        **kwargs,
-    ):
-        """
-        Confirms that the columns in a record matches a given set.
-
-        Ignore_excess, ignore columns not on the list, set to False to test against a
-        fixed set.
-        """
-        if ignore_excess:
-            return all(key in columns for key in row.keys())
-        else:
-            return sorted(columns) == sorted(list(row.keys()))
 
     def expect_column_values_to_not_be_null(
         self,
@@ -220,7 +220,7 @@ class Expectations(object):
             return sql_like_to_regex(like).match(str(value)) is not None
         return ignore_nulls
 
-    def expect_column_values_length_to_be_be(
+    def expect_column_values_length_to_be(
         self,
         *,
         row: dict,
@@ -232,6 +232,8 @@ class Expectations(object):
         """Confirms the string length of the value in a column is a given length"""
         value = row.get(column)
         if value:
+            if not hasattr(value, "__len__"):
+                value = str(value)
             return len(value) == length
         return ignore_nulls
 
@@ -247,6 +249,8 @@ class Expectations(object):
     ):
         value = row.get(column)
         if value:
+            if not hasattr(value, "__len__"):
+                value = str(value)
             return len(value) >= minimum and len(value) <= maximum
         return ignore_nulls
 

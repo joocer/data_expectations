@@ -26,7 +26,7 @@ def test_expect_column_values_to_be_of_type():
     assert test_func(row={}, column="key", expected_type="str", ignore_nulls=True)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_to_be_of_type()
 
