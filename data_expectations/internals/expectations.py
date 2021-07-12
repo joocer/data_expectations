@@ -233,10 +233,9 @@ class Expectations(object):
         """Confirms the string length of the value in a column is a given length"""
         value = row.get(column)
         if value:
-            if hasattr(value, "__len__"):
-                return len(value) == length
-            else:
-                return False
+            if not hasattr(value, "__len__"):
+                value = str(value)
+            return len(value) == length
         return ignore_nulls
 
     def expect_column_values_length_to_be_between(
@@ -251,10 +250,9 @@ class Expectations(object):
     ):
         value = row.get(column)
         if value:
-            if hasattr(value, "__len__"):
-                return len(value) >= minimum and len(value) <= maximum
-            else:
-                return False
+            if not hasattr(value, "__len__"):
+                value = str(value)
+            return len(value) >= minimum and len(value) <= maximum
         return ignore_nulls
 
     @lru_cache(1)

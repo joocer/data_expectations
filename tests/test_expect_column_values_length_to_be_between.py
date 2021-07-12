@@ -17,6 +17,7 @@ def test_expect_column_values_length_to_be_between():
     assert test_func(row={"string": None}, column="string", minimum=5, maximum=7)
     assert not test_func(row={"string": None}, column="string", minimum=5, maximum=7, ignore_nulls=False)
     assert test_func(row={"list":["a","b","c"]}, column="list", minimum=1, maximum=5)
+    assert test_func(row={"num": 100}, column="num", minimum=1, maximum=7)
 
 if __name__ == "__main__":
 
