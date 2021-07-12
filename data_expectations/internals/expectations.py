@@ -221,7 +221,7 @@ class Expectations(object):
             return sql_like_to_regex(like).match(str(value)) is not None
         return ignore_nulls
 
-    def expect_column_values_length_to_be_be(
+    def expect_column_values_length_to_be(
         self,
         *,
         row: dict,
@@ -233,7 +233,10 @@ class Expectations(object):
         """Confirms the string length of the value in a column is a given length"""
         value = row.get(column)
         if value:
-            return len(value) == length
+            if hasattr(value, "__len__"):
+                return len(value) == length
+            else:
+                return False
         return ignore_nulls
 
     def expect_column_values_length_to_be_between(
@@ -248,7 +251,10 @@ class Expectations(object):
     ):
         value = row.get(column)
         if value:
-            return len(value) >= minimum and len(value) <= maximum
+            if hasattr(value, "__len__"):
+                return len(value) >= minimum and len(value) <= maximum
+            else:
+                return False
         return ignore_nulls
 
     @lru_cache(1)
