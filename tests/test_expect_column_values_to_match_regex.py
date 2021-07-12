@@ -18,7 +18,7 @@ def test_expect_column_values_to_match_regex():
     assert not test_func(row={"string": None}, column="string", regex="^test$", ignore_nulls=False)
     
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_to_match_regex()
 

@@ -20,7 +20,7 @@ def test_expect_column_values_to_not_be_null():
     assert not test_func(row={"key": "value"}, column="field")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_to_not_be_null()
 

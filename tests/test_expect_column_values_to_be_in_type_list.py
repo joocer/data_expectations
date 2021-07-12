@@ -22,7 +22,7 @@ def test_expect_column_values_to_be_in_type_list():
     assert test_func(row={}, column="key", type_list=["str", "int"], ignore_nulls=True)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_to_be_in_type_list()
 

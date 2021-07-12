@@ -20,7 +20,7 @@ def test_expect_column_values_length_to_be():
     assert test_func(row={"num": 100}, column="num", length=3)
     
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_length_to_be()
 

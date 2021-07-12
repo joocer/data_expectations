@@ -20,7 +20,7 @@ def test_expect_column_values_to_be_in_set():
     assert test_func(row={"key": None}, column="key", symbols=(1,2,3))
     assert not test_func(row={"key": 8}, column="key", symbols=(1,2,3))
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_to_be_in_set()
 

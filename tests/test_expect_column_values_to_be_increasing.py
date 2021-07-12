@@ -103,7 +103,7 @@ def test_expect_column_values_to_be_increasing_invalid_with_nulls():
             assert not test_func(row=row, column="string")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_values_to_be_increasing_valid()
     test_expect_column_values_to_be_increasing_valid_with_nulls()

@@ -35,7 +35,7 @@ def test_expect_column_to_exist():
             assert test_func(row=row, column="string"), row
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     test_expect_column_to_exist()
 
