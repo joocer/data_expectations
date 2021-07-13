@@ -11,7 +11,7 @@ with open("README.md", "r") as rm:
     long_description = rm.read()
 
 setup(
-    name="dataexpectations",
+    name="data_expectations",
     version=__version__,
     description="Is your data meeting all your expecations",
     long_description=long_description,
