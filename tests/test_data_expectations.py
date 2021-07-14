@@ -1,9 +1,11 @@
 import datetime
 import os
 import sys
+import pytest
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
 import data_expectations as de
+from data_expectations.errors import ExpectationNotMetError, ExpectationNotUnderstoodError
 from rich import traceback
 
 traceback.install()
@@ -18,6 +20,10 @@ set_of_expectations = [
 
 set_of_unmet_expectations = [
     {"expectation": "expect_column_to_exist", "column": "value"}
+]
+
+set_of_unknown_expectations = [
+    {"expectation": "expect_better_behavior", "column": "value"}
 ]
 # fmt:on
 
@@ -40,6 +46,14 @@ def test_expectation():
 
     failing_test = de.Expectations(set_of_unmet_expectations)
     assert not de.evaluate_record(failing_test, TEST_DATA, suppress_errors=True)
+
+    with pytest.raises(ExpectationNotMetError):
+        de.evaluate_record(failing_test, TEST_DATA, suppress_errors=False)
+
+    unknown_test = de.Expectations(set_of_unknown_expectations)
+
+    with pytest.raises(ExpectationNotUnderstoodError):
+        de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=False)
 
     print(passing_test.metrics_collector.collector)
 
