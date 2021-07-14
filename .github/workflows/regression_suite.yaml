@@ -25,7 +25,7 @@ jobs:
         run: coverage run -m pytest 
 
       - name: Check Coverage
-        run: coverage report --include=data_expectations* --fail-under=90 -m
+        run: coverage report --include=data_expectations* --fail-under=95 -m
 
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1

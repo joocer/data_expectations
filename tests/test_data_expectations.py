@@ -52,6 +52,8 @@ def test_expectation():
 
     unknown_test = de.Expectations(set_of_unknown_expectations)
 
+    assert not de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=True)
+
     with pytest.raises(ExpectationNotUnderstoodError):
         de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=False)
 
