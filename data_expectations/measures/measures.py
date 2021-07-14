@@ -1,11 +1,3 @@
-"""
-
-** unique
-
-string:
-- string length
-
-"""
 from typing import Any
 from pydantic import BaseModel  # type:ignore
 
@@ -16,3 +8,6 @@ class Measures(BaseModel):
     count: int = 0
     missing: int = 0
     cummulative_sum: float = 0
+
+    # 25 items
+    # bit array
