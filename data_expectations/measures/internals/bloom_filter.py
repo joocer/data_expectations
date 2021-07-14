@@ -110,38 +110,3 @@ class BloomFilter:
             if self.bits[h] == 0:
                 return False
         return True
-
-    def write_bloom_filter(self, filename: str):
-        """
-        Save the bloom filter to disk
-        """
-        with open(filename, "wb") as fh:
-            fh.write(b"MB01")
-            fh.write(self.filter_size.to_bytes(4, byteorder="big"))
-            fh.write(self.hash_count.to_bytes(4, byteorder="big"))
-            self.bits.tofile(fh)
-
-    @staticmethod
-    def read_bloom_filter(filename: str):
-        """
-        Read a bloom filter from disk
-        """
-
-        def bytes_to_int(xbytes: bytes) -> int:
-            return int.from_bytes(xbytes, "big")
-
-        bf = BloomFilter()
-
-        bits = bitarray()
-        with open(filename, "rb") as fh:
-            magic_string = fh.read(4).decode()
-            if magic_string != "MB01":  # pragma: no cover
-                raise IndexError(f"{filename} does appear to be a valid bloom file")
-            filter_size = bytes_to_int(fh.read(4))
-            hash_count = bytes_to_int(fh.read(4))
-            bits.fromfile(fh)
-
-        bf.bits = bits
-        bf.filter_size = filter_size
-        bf.hash_count = hash_count
-        return bf
