@@ -117,5 +117,5 @@ class BloomFilter:
                 return False
         return True
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"BloomFilter <bits:{self.filter_size}, hashes:{self.hash_count}>"
