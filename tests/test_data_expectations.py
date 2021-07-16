@@ -57,8 +57,6 @@ def test_expectation():
     with pytest.raises(ExpectationNotUnderstoodError):
         de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=False)
 
-    print(passing_test.metrics_collector.collector)
-
 
 if __name__ == "__main__":  # pragma: no cover
     test_expectation()

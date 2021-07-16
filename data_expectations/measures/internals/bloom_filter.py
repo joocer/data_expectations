@@ -94,13 +94,19 @@ class BloomFilter:
 
     def add(self, term):
         """
-        Add a value to the index
+        Add a value to the index, returns true if the item is new, false if seen before
         """
         import mmh3  # type:ignore
 
+        collision = True
+
         for i in range(self.hash_count):
             h = mmh3.hash(term, seed=i) % self.filter_size
-            self.bits[h] = 1
+            if not self.bits[h]:
+                self.bits[h] = 1
+                collision = False
+
+        return not collision
 
     def __contains__(self, term):
         import mmh3  # type:ignore
@@ -110,3 +116,6 @@ class BloomFilter:
             if self.bits[h] == 0:
                 return False
         return True
+
+    def __repr__(self):
+        return f"BloomFilter <bits:{self.filter_size}, hashes:{self.hash_count}>"

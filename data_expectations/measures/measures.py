@@ -9,5 +9,5 @@ class Measures(BaseModel):
     missing: int = 0
     cummulative_sum: float = 0
 
-    # 25 items
-    # bit array
+    unqiue_items: int = 0
+    unique_list: dict = {}
