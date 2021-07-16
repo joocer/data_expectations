@@ -1,6 +1,6 @@
 <img src="icon.png" height="84px" />
 
-## data_expectations  
+### data_expectations  
 _Is your data meeting your expectations?_
 
 ----
