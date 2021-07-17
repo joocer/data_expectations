@@ -10,7 +10,7 @@ Data Expectations is in Alpha - interface and usage patterns are being stablized
 ~~~
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/joocer/data_expectations/blob/main/LICENSE)
-[![Status](https://img.shields.io/badge/status-alpha-yellowgreen)](https://github.com/joocer/data_expectations)
+[![Status](https://img.shields.io/badge/status-beta-yellowgreen)](https://github.com/joocer/data_expectations)
 [![Regression Suite](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml)
 [![Static Analysis](https://github.com/joocer/data_expectations/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/static_analysis.yml)
 [![codecov](https://codecov.io/gh/joocer/data_expectations/branch/main/graph/badge.svg?token=XA60LUVH0W)](https://codecov.io/gh/joocer/data_expectations)
