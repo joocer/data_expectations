@@ -6,7 +6,7 @@ _Is your data meeting your expectations?_
 ----
 
 ~~~diff
-Data Expectations is in Alpha - interface and usage patterns are being stablized
+Data Expectations is in Beta - minor changes to interface and usage patterns should be expected
 ~~~
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/joocer/data_expectations/blob/main/LICENSE)
