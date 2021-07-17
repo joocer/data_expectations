@@ -1,6 +1,6 @@
 """
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│          NOTE: BINNING HAS BEEN REMOVED AS BOTH SLOW AND INACCURATE          │
+│                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
 """
 import os
@@ -36,7 +36,6 @@ def test_bf():
     assert len(collector) <= (
         size * fp * 2
     ), f"test_bf {len(collector)} {(size * fp * 2)}"
-
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -45,8 +45,26 @@ structure of a table.
 
 ## Install
 
-~~~
+~~~bash
 pip install data_expectations
 ~~~
 
-> if data doesn't match, I'm not angry, I'm just disappointed.
+## Example Usage
+
+~~~python
+import data_expectations as de
+
+TEST_DATA = {"name":"charles","age":12}
+
+set_of_expectations = [
+    {"expectation": "expect_column_to_exist", "column": "name"},
+    {"expectation": "expect_column_to_exist", "column": "age"},
+    {"expectation": "expect_column_values_to_be_between", "column": "age", "minimum": 0, "maximum": 120},
+]
+
+expectations = de.Expectations(set_of_expectations)
+try:
+    de.evaluate_record(expectations, TEST_DATA)
+except de.errors.ExpectationNotMetError:
+    print("Data Didn't Meet Expectations")
+~~~

@@ -22,6 +22,7 @@ limitations under the License.
 """
 from bitarray import bitarray  # type:ignore
 
+
 class BloomFilter:
 
     __slots__ = ("filter_size", "hash_count", "bits")

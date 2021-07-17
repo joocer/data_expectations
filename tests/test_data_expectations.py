@@ -5,7 +5,10 @@ import pytest
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
 import data_expectations as de
-from data_expectations.errors import ExpectationNotMetError, ExpectationNotUnderstoodError
+from data_expectations.errors import (
+    ExpectationNotMetError,
+    ExpectationNotUnderstoodError,
+)
 from rich import traceback
 
 traceback.install()

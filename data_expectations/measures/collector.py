@@ -5,6 +5,7 @@ from .internals import BloomFilter
 BLOOM_FILTER_SIZE = 5000000
 BLOOM_FILTER_FALSE_POSITIVE_RATE = 0.0005
 
+
 class MeasuresCollector(object):
     def __init__(self):
         self.counter = 0

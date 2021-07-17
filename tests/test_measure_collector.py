@@ -1,6 +1,6 @@
 """
 ┌──────────────────────────────────────────────────────────────────────────────┐
-│          NOTE: BINNING HAS BEEN REMOVED AS BOTH SLOW AND INACCURATE          │
+│                                                                              │
 └──────────────────────────────────────────────────────────────────────────────┘
 """
 import os
@@ -47,6 +47,7 @@ def test_measures():
         m.add(i)
 
     print(m.collector)
+
 
 if __name__ == "__main__":
     test_measures()
