@@ -1,9 +1,14 @@
 import datetime
 import os
 import sys
+import pytest
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
 import data_expectations as de
+from data_expectations.errors import (
+    ExpectationNotMetError,
+    ExpectationNotUnderstoodError,
+)
 from rich import traceback
 
 traceback.install()
@@ -16,11 +21,14 @@ set_of_expectations = [
     {"expectation": "expect_column_values_to_match_like", "column": "string_field", "like":"%"}
 ]
 
-print(
-    de.Expectations([]).expect_column_values_to_match_like(
-        row={"a": "anakin skywalker"}, column="a", like="an%ker"
-    )
-)
+set_of_unmet_expectations = [
+    {"expectation": "expect_column_to_exist", "column": "value"}
+]
+
+set_of_unknown_expectations = [
+    {"expectation": "expect_better_behavior", "column": "value"}
+]
+# fmt:on
 
 
 def test_expectation():
@@ -36,10 +44,21 @@ def test_expectation():
         "enum_field": "RED",
     }
 
-    test = de.Expectations(set_of_expectations)
-    assert de.evaluate_record(test, TEST_DATA)
+    passing_test = de.Expectations(set_of_expectations)
+    assert de.evaluate_record(passing_test, TEST_DATA)
 
-    print(test.metrics_collector.collector)
+    failing_test = de.Expectations(set_of_unmet_expectations)
+    assert not de.evaluate_record(failing_test, TEST_DATA, suppress_errors=True)
+
+    with pytest.raises(ExpectationNotMetError):
+        de.evaluate_record(failing_test, TEST_DATA, suppress_errors=False)
+
+    unknown_test = de.Expectations(set_of_unknown_expectations)
+
+    assert not de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=True)
+
+    with pytest.raises(ExpectationNotUnderstoodError):
+        de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=False)
 
 
 if __name__ == "__main__":  # pragma: no cover

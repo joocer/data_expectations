@@ -1,6 +1,6 @@
-<img src="icon.png" height="84px" />
+<img src="icon.png" height="92px" />
 
-## data_expectations  
+### data_expectations  
 _Is your data meeting your expectations?_
 
 ----
@@ -10,7 +10,7 @@ Data Expectations is in Alpha - interface and usage patterns are being stablized
 ~~~
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/joocer/data_expectations/blob/main/LICENSE)
-[![Status](https://img.shields.io/badge/status-alpha-yellowgreen)](https://github.com/joocer/data_expectations)
+[![Status](https://img.shields.io/badge/status-beta-yellowgreen)](https://github.com/joocer/data_expectations)
 [![Regression Suite](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/regression_suite.yaml)
 [![Static Analysis](https://github.com/joocer/data_expectations/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/joocer/data_expectations/actions/workflows/static_analysis.yml)
 [![codecov](https://codecov.io/gh/joocer/data_expectations/branch/main/graph/badge.svg?token=XA60LUVH0W)](https://codecov.io/gh/joocer/data_expectations)
@@ -23,9 +23,9 @@ A delarative approach to asserting qualities of your datasets. Instead of tests 
 `column_values_are_increasing`. Most of the time you don't need to know _how_ it got
 like that, you are only interested _what_ the data looks like.
 
-Expectations can be used alongside, or in place of a schema validator, however they
-are not intended to perform validation of the data in a dataset, not just the structure
-of a table. 
+Expectations can be used alongside, or in place of a schema validator, however
+Expectations is intended to perform validation of the data in a dataset, not just the
+structure of a table. 
 
 ## Expectations
 
@@ -45,8 +45,26 @@ of a table.
 
 ## Install
 
-~~~
+~~~bash
 pip install data_expectations
 ~~~
 
-> if data doesn't match, I'm not angry, I'm just disappointed.
+## Example Usage
+
+~~~python
+import data_expectations as de
+
+TEST_DATA = {"name":"charles","age":12}
+
+set_of_expectations = [
+    {"expectation": "expect_column_to_exist", "column": "name"},
+    {"expectation": "expect_column_to_exist", "column": "age"},
+    {"expectation": "expect_column_values_to_be_between", "column": "age", "minimum": 0, "maximum": 120},
+]
+
+expectations = de.Expectations(set_of_expectations)
+try:
+    de.evaluate_record(expectations, TEST_DATA)
+except de.errors.ExpectationNotMetError:
+    print("Data Didn't Meet Expectations")
+~~~
