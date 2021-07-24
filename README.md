@@ -1,7 +1,7 @@
 <img src="icon.png" height="92px" />
 
 ### data_expectations  
-_Is your data meeting your expectations?_
+_Are your data meeting your expectations?_
 
 ----
 

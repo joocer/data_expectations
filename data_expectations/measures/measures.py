@@ -7,6 +7,7 @@ class Measures(BaseModel):
     maximum: Any = None
     count: int = 0
     missing: int = 0
+    invalid: int = 0
     cummulative_sum: float = 0
 
     unqiue_items: int = 0

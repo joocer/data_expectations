@@ -1,10 +1,10 @@
 from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
 
 
-def evaluate_record(self, record, suppress_errors: bool = False):
-    self.metrics_collector.add(record)
-    full_suite = self._available_expectations()
-    for expectation in self.set_of_expectations:
+def evaluate_record(expectations, record, suppress_errors: bool = False):
+    expectations.metrics_collector.add(record)
+    full_suite = expectations._available_expectations()
+    for expectation in expectations.set_of_expectations:
         if expectation["expectation"] in full_suite:
             if not full_suite[expectation["expectation"]](row=record, **expectation):
                 if not suppress_errors:
@@ -16,4 +16,12 @@ def evaluate_record(self, record, suppress_errors: bool = False):
             if not suppress_errors:
                 raise ExpectationNotUnderstoodError(expectation["expectation"])
             return False  # unknown expectation
+    return True
+
+
+def evaluate_dictset(expectations, dictset, suppress_errors: bool = False):
+    for record in dictset:
+        result = evaluate_record(expectations, record, suppress_errors)
+        if not result:
+            return False
     return True
