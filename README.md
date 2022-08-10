@@ -1,6 +1,6 @@
 <img src="icon.png" height="92px" />
 
-### data_expectations  
+### Data Expectations  
 _Are your data meeting your expectations?_
 
 ----
@@ -40,6 +40,8 @@ Expectations can be used alongside, or in place of a schema validator, however E
 ~~~bash
 pip install data_expectations
 ~~~
+
+Data Expectations has no external dependencies, can be used ad hoc and in-the-moment without complex set up.
 
 ## Example Usage
 

@@ -252,7 +252,7 @@ class Expectations(object):
         *,
         row: dict,
         column: str,
-        threshold: any,
+        threshold,
         ignore_nulls: bool = True,
         **kwargs,
     ):
@@ -266,7 +266,7 @@ class Expectations(object):
         *,
         row: dict,
         column: str,
-        threshold: any,
+        threshold,
         ignore_nulls: bool = True,
         **kwargs,
     ):
