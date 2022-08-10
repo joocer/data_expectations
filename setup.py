@@ -13,7 +13,7 @@ with open("README.md", "r") as rm:
 setup(
     name="data_expectations",
     version=__version__,
-    description="Is your data meeting all your expecations",
+    description="Are your data meeting all your expecations",
     long_description=long_description,
     long_description_content_type="text/markdown",
     maintainer="Joocer",

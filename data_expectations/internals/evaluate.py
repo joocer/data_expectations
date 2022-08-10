@@ -2,7 +2,6 @@ from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
 
 
 def evaluate_record(expectations, record, suppress_errors: bool = False):
-    expectations.metrics_collector.add(record)
     full_suite = expectations._available_expectations()
     for expectation in expectations.set_of_expectations:
         if expectation["expectation"] in full_suite:
