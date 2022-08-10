@@ -18,14 +18,9 @@ validity, and some assertions are impractical - for example an expectation of th
 of all of the values in a table.
 
 To Be Added
-* expect_column_values_to_be_more_than
-* expect_column_values_to_be_less_than
 * expect_column_a_value_to_be_more_than_column_b_value
-
-* expect_table_row_count_to_be_less_than
-* expect_table_row_count_to_be_more_than
-* expect_table_row_count_to_be_between
-* expect_table_row_count_to_be
+* expect_column_a_value_to_be_different_to_column_b_value
+* expect_sum_of_column_values_to_be
 * expect_column_values_to_be_unique
 
 
@@ -35,13 +30,11 @@ import inspect
 from functools import lru_cache
 from typing import Any, Iterable
 from .text import sql_like_to_regex, build_regex
-from ..measures.collector import MeasuresCollector
 
 
 class Expectations(object):
     def __init__(self, set_of_expectations: Iterable[dict]):
         self.set_of_expectations = set_of_expectations
-        self.metrics_collector = MeasuresCollector()
         self._tracker: dict = {}
 
     ###################################################################################
@@ -252,6 +245,34 @@ class Expectations(object):
             if not hasattr(value, "__len__"):
                 value = str(value)
             return len(value) >= minimum and len(value) <= maximum
+        return ignore_nulls
+
+    def expect_column_values_to_be_more_than(
+        self,
+        *,
+        row: dict,
+        column: str,
+        threshold,
+        ignore_nulls: bool = True,
+        **kwargs,
+    ):
+        value = row.get(column)
+        if value:
+            return value > threshold
+        return ignore_nulls
+
+    def expect_column_values_to_be_less_than(
+        self,
+        *,
+        row: dict,
+        column: str,
+        threshold,
+        ignore_nulls: bool = True,
+        **kwargs,
+    ):
+        value = row.get(column)
+        if value:
+            return value < threshold
         return ignore_nulls
 
     @lru_cache(1)
