@@ -15,7 +15,9 @@ _Are your data meeting your expectations?_
 
 A delarative approach to asserting qualities of your datasets. Instead of tests like `is_sorted` to determine if a column is ordered, the expectation is `column_values_are_increasing`. Most of the time you don't need to know _how_ it got like that, you are only interested _what_ the data looks like.
 
-Expectations can be used alongside, or in place of a schema validator, however Expectations is intended to perform validation of the data in a dataset, not just the structure of a table. 
+Expectations can be used alongside, or in place of a schema validator, however Expectations is intended to perform validation of the data in a dataset, not just the structure of a table. Records should be a Python dictionary (or dictionary-like object) and can be processed one-by-one, or against an entire list of dictionaries.
+
+[Data Expectations](https://github.com/joocer/data_expectations) was inspired by the great [Great Expectations](https://github.com/great-expectations/great_expectations) library, but I wanted something which was easier to quickly set up and run. Data Expectations can do less, but it does it with a fraction of the effort. Data Expectations was written to run as a step in data processing pipelines, testing the data before it is committed to the warehouse.
 
 ## Expectations
 

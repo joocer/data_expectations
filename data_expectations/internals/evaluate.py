@@ -18,7 +18,7 @@ def evaluate_record(expectations, record, suppress_errors: bool = False):
     return True
 
 
-def evaluate_dictset(expectations, dictset, suppress_errors: bool = False):
+def evaluate_list(expectations, dictset, suppress_errors: bool = False):
     for record in dictset:
         result = evaluate_record(expectations, record, suppress_errors)
         if not result:

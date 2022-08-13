@@ -61,7 +61,35 @@ def test_expectation():
         de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=False)
 
 
+def test_list_of_data():
+
+    # fmt:off
+    TEST_DATA = [
+        { "string_field": "string", "integer_field": 100, "boolean_field": True, "date_field": datetime.datetime.today(), "other_field": ["abc"], "nullable_field": None, "list_field": ["a", "b", "c"], "enum_field": "RED" },
+        { "string_field": "field", "integer_field": -100, "boolean_field": False, "date_field": datetime.date.max, "other_field": [], "nullable_field": None, "list_field": [], "enum_field": "GREEN" },
+    ]
+    # fmt:on
+
+    passing_test = de.Expectations(set_of_expectations)
+    assert de.evaluate_list(passing_test, TEST_DATA)
+
+    failing_test = de.Expectations(set_of_unmet_expectations)
+    assert not de.evaluate_list(failing_test, TEST_DATA, suppress_errors=True)
+
+    with pytest.raises(ExpectationNotMetError):
+        de.evaluate_list(failing_test, TEST_DATA, suppress_errors=False)
+
+    unknown_test = de.Expectations(set_of_unknown_expectations)
+
+    assert not de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=True)
+
+    with pytest.raises(ExpectationNotUnderstoodError):
+        de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=False)
+
+
+
 if __name__ == "__main__":  # pragma: no cover
     test_expectation()
+    test_list_of_data()
 
-    print("okay")
+    print("✅ okay")
