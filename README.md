@@ -12,6 +12,7 @@ _Are your data meeting your expectations?_
 [![Downloads](https://pepy.tech/badge/data-expectations)](https://pepy.tech/project/data-expectations)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![PyPI Latest Release](https://img.shields.io/pypi/v/data-expectations.svg)](https://pypi.org/project/data-expectations/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjoocer%2Fdata_expectations.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjoocer%2Fdata_expectations?ref=badge_shield)
 
 A delarative approach to asserting qualities of your datasets. Instead of tests like `is_sorted` to determine if a column is ordered, the expectation is `column_values_are_increasing`. Most of the time you don't need to know _how_ it got like that, you are only interested _what_ the data looks like.
 
