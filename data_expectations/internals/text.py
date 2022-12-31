@@ -1,4 +1,5 @@
 import re
+
 from functools import lru_cache
 
 SPECIAL_REGEX_CHARS = {ch: "\\" + ch for ch in ".^$*+?{}[]|()\\"}

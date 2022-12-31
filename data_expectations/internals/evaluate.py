@@ -1,4 +1,5 @@
-from ..errors import ExpectationNotMetError, ExpectationNotUnderstoodError
+from data_expectations.errors import ExpectationNotMetError
+from data_expectations.errors import ExpectationNotUnderstoodError
 
 
 def evaluate_record(expectations, record, suppress_errors: bool = False):

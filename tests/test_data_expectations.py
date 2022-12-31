@@ -87,7 +87,6 @@ def test_list_of_data():
         de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=False)
 
 
-
 if __name__ == "__main__":  # pragma: no cover
     test_expectation()
     test_list_of_data()
