@@ -27,9 +27,11 @@ To Be Added
 - if data doesn't match, I'm not cross, I'm just disappointed.
 """
 import inspect
+
 from functools import lru_cache
-from typing import Any, Iterable
-from .text import sql_like_to_regex, build_regex
+from typing import Iterable
+
+from data_expectations.internals.text import build_regex, sql_like_to_regex
 
 
 class Expectations(object):

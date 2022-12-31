@@ -27,10 +27,10 @@ def test_example():
     expectations = de.Expectations(set_of_expectations)
     try:
         de.evaluate_record(expectations, TEST_DATA)
-    except de.errors.ExpectationNotMetError:
+    except de.errors.ExpectationNotMetError:  # pragma: no cover
         print("Data Didn't Meet Expectations")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     test_example()
     print("✅ okay")

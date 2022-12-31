@@ -13,7 +13,7 @@ jobs:
       - name: Set Up Environment
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8' 
+          python-version: '3.9' 
         
       - name: Install Requirements
         run: |
@@ -25,7 +25,7 @@ jobs:
         run: coverage run -m pytest 
 
       - name: Check Coverage
-        run: coverage report --include=data_expectations* --fail-under=95 -m
+        run: coverage report --include=data_expectations/** --fail-under=95 -m
 
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
@@ -42,7 +42,7 @@ jobs:
       - name: Set Up Environment
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8' 
+          python-version: '3.9' 
 
       - name: Install Requirements
         run: |
