@@ -1,4 +1,5 @@
-from setuptools import setup, find_packages  # type:ignore
+from setuptools import find_packages  # type:ignore
+from setuptools import setup
 
 with open("data_expectations/version.py", "r") as v:
     vers = v.read()

@@ -12,7 +12,6 @@ traceback.install()
 
 
 def test_expect_column_values_to_not_be_null():
-
     test_func = de.Expectations([]).expect_column_values_to_not_be_null
 
     assert test_func(row={"key": "value"}, column="key")
@@ -21,7 +20,5 @@ def test_expect_column_values_to_not_be_null():
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     test_expect_column_values_to_not_be_null()
-
-    print("test manually run")
+    print("✅ okay")

@@ -22,7 +22,6 @@ DATA = [
 
 
 def test_expect_column_to_exist():
-
     test_func = de.Expectations([]).expect_column_to_exist
 
     assert not test_func(row='{"number":1}', column="number")
@@ -36,7 +35,5 @@ def test_expect_column_to_exist():
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     test_expect_column_to_exist()
-
-    print("test manually run")
+    print("✅ okay")

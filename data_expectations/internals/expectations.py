@@ -1,3 +1,15 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """
 Inspired by the Great Expectations library.
 
@@ -17,21 +29,35 @@ in a flow - as such it is not intended to test an entire dataset at once to test
 validity, and some assertions are impractical - for example an expectation of the mean
 of all of the values in a table.
 
-To Be Added
-* expect_column_a_value_to_be_more_than_column_b_value
-* expect_column_a_value_to_be_different_to_column_b_value
-* expect_sum_of_column_values_to_be
-* expect_column_values_to_be_unique
-
-
 - if data doesn't match, I'm not cross, I'm just disappointed.
 """
 import inspect
-
-from functools import lru_cache
+import re
 from typing import Iterable
 
-from data_expectations.internals.text import build_regex, sql_like_to_regex
+from data_expectations.internals.text import sql_like_to_regex
+
+try:
+    # added 3.9
+    from functools import cache
+except ImportError:
+    from functools import lru_cache
+
+    cache = lru_cache(1)
+
+
+@cache
+def all_expectations():
+    """
+    Programatically get the list of expectations and build them into a dictionary.
+    We then use this dictionary to look up the methods to test the expectations in
+    the set of expectations for a dataset.
+    """
+    expectations = {}
+    for handle, member in inspect.getmembers(Expectations(None)):
+        if callable(member) and handle.startswith("expect_"):
+            expectations[handle] = member
+    return expectations
 
 
 class Expectations(object):
@@ -59,8 +85,7 @@ class Expectations(object):
         """
         if ignore_excess:
             return all(key in columns for key in row.keys())
-        else:
-            return sorted(columns) == sorted(list(row.keys()))
+        return sorted(columns) == sorted(list(row.keys()))
 
     def expect_column_to_exist(
         self,
@@ -198,7 +223,7 @@ class Expectations(object):
     ):
         value = row.get(column)
         if value:
-            return build_regex(regex).match(str(value)) is not None
+            return re.compile(regex).match(str(value)) is not None
         return ignore_nulls
 
     def expect_column_values_to_match_like(
@@ -276,16 +301,3 @@ class Expectations(object):
         if value:
             return value < threshold
         return ignore_nulls
-
-    @lru_cache(1)
-    def _available_expectations(self):
-        """
-        Programatically get the list of expectations and build them into a dictionary.
-        We then use this dictionary to look up the methods to test the expectations in
-        the set of expectations for a dataset.
-        """
-        expectations = {}
-        for handle, member in inspect.getmembers(self):
-            if callable(member) and handle.startswith("expect_"):
-                expectations[handle] = member
-        return expectations

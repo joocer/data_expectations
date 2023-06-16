@@ -9,7 +9,6 @@ traceback.install()
 
 
 def test_expect_column_values_to_be_more_than():
-
     test_func = de.Expectations([]).expect_column_values_to_be_more_than
 
     assert test_func(row={"key": "b"}, column="key", threshold="a")
@@ -26,7 +25,5 @@ def test_expect_column_values_to_be_more_than():
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     test_expect_column_values_to_be_more_than()
-
-    print("test manually run")
+    print("✅ okay")
