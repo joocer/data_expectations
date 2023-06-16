@@ -31,8 +31,8 @@ of all of the values in a table.
 
 - if data doesn't match, I'm not cross, I'm just disappointed.
 """
-import inspect
 import re
+from inspect import getmembers
 from typing import Iterable
 
 from data_expectations.internals.text import sql_like_to_regex
@@ -54,13 +54,13 @@ def all_expectations():
     the set of expectations for a dataset.
     """
     expectations = {}
-    for handle, member in inspect.getmembers(Expectations(None)):
+    for handle, member in getmembers(Expectations(None)):
         if callable(member) and handle.startswith("expect_"):
             expectations[handle] = member
     return expectations
 
 
-class Expectations(object):
+class Expectations:
     def __init__(self, set_of_expectations: Iterable[dict]):
         self.set_of_expectations = set_of_expectations
         self._tracker: dict = {}

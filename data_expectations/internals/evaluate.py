@@ -23,13 +23,16 @@ def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
     """
     Test 'record' against a defined set of 'expectations'.
     """
-    for expectation in expectations.set_of_expectations:
-        if expectation["expectation"] not in ALL_EXPECTATIONS:
-            raise ExpectationNotUnderstoodError(expectation=expectation["expectation"])
+    for expectation_definition in expectations.set_of_expectations:
+        # get the name of the expectation
+        expectation = expectation_definition["expectation"]
 
-        if not ALL_EXPECTATIONS[expectation["expectation"]](row=record, **expectation):
+        if expectation not in ALL_EXPECTATIONS:
+            raise ExpectationNotUnderstoodError(expectation=expectation)
+
+        if not ALL_EXPECTATIONS[expectation](row=record, **expectation_definition):
             if not suppress_errors:
-                raise ExpectationNotMetError(expectation["expectation"], record)
+                raise ExpectationNotMetError(expectation, record)
             return False  # data failed to meet expectation
 
     return True

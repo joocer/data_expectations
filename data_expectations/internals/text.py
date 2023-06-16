@@ -25,5 +25,6 @@ SPECIAL_REGEX_CHARS = {ch: "\\" + ch for ch in ".^$*+?{}[]|()\\"}
 
 @cache
 def sql_like_to_regex(fragment):
+    """Create a RegEx to test a SQL LIKE condition"""
     safe_fragment = "".join([SPECIAL_REGEX_CHARS.get(ch, ch) for ch in fragment])
     return re.compile("^" + safe_fragment.replace("%", ".*?").replace("_", ".") + "$")
