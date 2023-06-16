@@ -19,7 +19,7 @@ from data_expectations.internals.expectations import all_expectations
 ALL_EXPECTATIONS = all_expectations()
 
 
-def evaluate_record(expectations: "Expectations", record: dict, suppress_errors: bool = False):
+def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
     """
     Test 'record' against a defined set of 'expectations'.
     """
@@ -35,9 +35,7 @@ def evaluate_record(expectations: "Expectations", record: dict, suppress_errors:
     return True
 
 
-def evaluate_list(
-    expectations: "Expectations", dictset: typing.Iterable[dict], suppress_errors: bool = False
-):
+def evaluate_list(expectations, dictset: typing.Iterable[dict], suppress_errors: bool = False):
     """
     Execute the expectation test against an iterable of dictionaries
     """
