@@ -32,7 +32,6 @@ set_of_unknown_expectations = [
 
 
 def test_expectation():
-
     TEST_DATA = {
         "string_field": "string",
         "integer_field": 100,
@@ -55,14 +54,14 @@ def test_expectation():
 
     unknown_test = de.Expectations(set_of_unknown_expectations)
 
-    assert not de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=True)
-
     with pytest.raises(ExpectationNotUnderstoodError):
         de.evaluate_record(unknown_test, TEST_DATA, suppress_errors=False)
 
+    with pytest.raises(ExpectationNotUnderstoodError):
+        de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=True)
+
 
 def test_list_of_data():
-
     # fmt:off
     TEST_DATA = [
         { "string_field": "string", "integer_field": 100, "boolean_field": True, "date_field": datetime.datetime.today(), "other_field": ["abc"], "nullable_field": None, "list_field": ["a", "b", "c"], "enum_field": "RED" },
@@ -81,10 +80,11 @@ def test_list_of_data():
 
     unknown_test = de.Expectations(set_of_unknown_expectations)
 
-    assert not de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=True)
-
     with pytest.raises(ExpectationNotUnderstoodError):
         de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=False)
+
+    with pytest.raises(ExpectationNotUnderstoodError):
+        de.evaluate_list(unknown_test, TEST_DATA, suppress_errors=True)
 
 
 if __name__ == "__main__":  # pragma: no cover

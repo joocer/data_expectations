@@ -9,7 +9,6 @@ traceback.install()
 
 
 def test_expect_column_values_to_be_in_set():
-
     test_func = de.Expectations([]).expect_column_values_to_be_in_set
 
     assert test_func(row={"key": "a"}, column="key", symbols=("a", "b", "c"))
@@ -22,7 +21,5 @@ def test_expect_column_values_to_be_in_set():
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     test_expect_column_values_to_be_in_set()
-
-    print("test manually run")
+    print("✅ okay")

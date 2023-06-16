@@ -40,7 +40,6 @@ INVALID_DATA_SPARSE = [
 
 
 def test_expect_column_values_to_be_decreasing_valid():
-
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
 
     # valid data is always valid
@@ -50,7 +49,6 @@ def test_expect_column_values_to_be_decreasing_valid():
 
 
 def test_expect_column_values_to_be_decreasing_valid_with_nulls():
-
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
 
     # valid data is always valid
@@ -60,7 +58,6 @@ def test_expect_column_values_to_be_decreasing_valid_with_nulls():
 
 
 def test_expect_column_values_to_be_decreasing_valid_with_nulls_which_arent_ignored():
-
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
 
     for i, row in enumerate(VALID_DATA_SPARSE):
@@ -73,7 +70,6 @@ def test_expect_column_values_to_be_decreasing_valid_with_nulls_which_arent_igno
 
 
 def test_expect_column_values_to_be_decreasing_invalid():
-
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
 
     # invalid data is valid the first cycle
@@ -87,7 +83,6 @@ def test_expect_column_values_to_be_decreasing_invalid():
 
 
 def test_expect_column_values_to_be_decreasing_invalid_with_nulls():
-
     test_func = de.Expectations([]).expect_column_values_to_be_decreasing
 
     # invalid data is valid the first cycle
@@ -101,11 +96,9 @@ def test_expect_column_values_to_be_decreasing_invalid_with_nulls():
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     test_expect_column_values_to_be_decreasing_valid()
     test_expect_column_values_to_be_decreasing_valid_with_nulls()
     test_expect_column_values_to_be_decreasing_valid_with_nulls_which_arent_ignored()
     test_expect_column_values_to_be_decreasing_invalid()
     test_expect_column_values_to_be_decreasing_invalid_with_nulls()
-
-    print("test manually run")
+    print("✅ okay")

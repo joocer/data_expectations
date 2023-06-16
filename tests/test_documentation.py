@@ -8,7 +8,6 @@ sys.path.insert(1, os.path.join(sys.path[0], ".."))
 
 
 def test_example():
-
     import data_expectations as de
 
     TEST_DATA = {"name": "charles", "age": 12}

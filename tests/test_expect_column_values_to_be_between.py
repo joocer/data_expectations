@@ -9,7 +9,6 @@ traceback.install()
 
 
 def test_expect_column_values_to_be_between():
-
     test_func = de.Expectations([]).expect_column_values_to_be_between
 
     assert test_func(row={"key": "b"}, column="key", minimum="a", maximum="c")
@@ -26,7 +25,5 @@ def test_expect_column_values_to_be_between():
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     test_expect_column_values_to_be_between()
-
-    print("test manually run")
+    print("✅ okay")
