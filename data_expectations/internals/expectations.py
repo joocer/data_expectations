@@ -40,7 +40,7 @@ from data_expectations.internals.text import sql_like_to_regex
 try:
     # added 3.9
     from functools import cache
-except ImportError:
+except ImportError:  # pragma: no cover
     from functools import lru_cache
 
     cache = lru_cache(1)
