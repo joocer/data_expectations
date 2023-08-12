@@ -33,11 +33,13 @@ of all of the values in a table.
 """
 import re
 from inspect import getmembers
+from typing import Any
+from typing import Dict
 from typing import Iterable
 
 from data_expectations.internals.text import sql_like_to_regex
 
-GLOBAL_TRACKER = {}
+GLOBAL_TRACKER: Dict[str, Any] = {}
 
 
 def track_previous(func):
