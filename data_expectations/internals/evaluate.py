@@ -12,16 +12,25 @@
 
 import typing
 
+from data_expectations import Expectations
 from data_expectations.errors import ExpectationNotMetError
 from data_expectations.errors import ExpectationNotUnderstoodError
-from data_expectations.internals.expectations import all_expectations
 
-ALL_EXPECTATIONS = all_expectations()
+ALL_EXPECTATIONS = Expectations.all_expectations()
 
 
 def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
     """
-    Test 'record' against a defined set of 'expectations'.
+    Test a single record against a defined set of expectations.
+
+    Args:
+        expectations: The Expectations instance.
+        record: The dictionary record to be tested.
+        all_expectations: The dictionary of all available expectations.
+        suppress_errors: Whether to suppress expectation errors and return False instead.
+
+    Returns:
+        True if all expectations are met, False otherwise.
     """
     for expectation_definition in expectations.set_of_expectations:
         # get the name of the expectation
@@ -40,10 +49,14 @@ def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
 
 def evaluate_list(expectations, dictset: typing.Iterable[dict], suppress_errors: bool = False):
     """
-    Execute the expectation test against an iterable of dictionaries
+    Evaluate a set of records against a defined set of Expectations.
+
+    Args:
+        expectations: The Expectations instance.
+        dictset: The iterable set of dictionary records to be tested.
+        suppress_errors: Whether to suppress expectation errors and return False for the entire set.
+
+    Returns:
+        True if all records meet all Expectations, False otherwise.
     """
-    for record in dictset:
-        result = evaluate_record(expectations, record, suppress_errors)
-        if not result:
-            return False
-    return True
+    return all(evaluate_record(expectations, record, suppress_errors) for record in dictset)

@@ -2,14 +2,12 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-import data_expectations as de
-from rich import traceback
 
-traceback.install()
+import data_expectations as de
 
 
 def test_expect_column_values_length_to_be():
-    test_func = de.Expectations([]).expect_column_values_length_to_be
+    test_func = de.Expectations.expect_column_values_length_to_be
 
     assert test_func(row={"string": "value"}, column="string", length=5)
     assert not test_func(row={"string": "main"}, column="string", length=5)

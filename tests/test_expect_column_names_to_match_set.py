@@ -2,14 +2,12 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-import data_expectations as de
-from rich import traceback
 
-traceback.install()
+import data_expectations as de
 
 
 def test_expect_column_names_to_match_set():
-    test_func = de.Expectations([]).expect_column_names_to_match_set
+    test_func = de.Expectations.expect_column_names_to_match_set
 
     assert test_func(row={"number": 7, "string": "d"}, columns=("number", "string"))
     assert test_func(
