@@ -2,14 +2,12 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-import data_expectations as de
-from rich import traceback
 
-traceback.install()
+import data_expectations as de
 
 
 def test_expect_column_values_to_be_between():
-    test_func = de.Expectations([]).expect_column_values_to_be_between
+    test_func = de.Expectations.expect_column_values_to_be_between
 
     assert test_func(row={"key": "b"}, column="key", minimum="a", maximum="c")
     assert test_func(row={"key": "b"}, column="key", minimum="a", maximum="b")

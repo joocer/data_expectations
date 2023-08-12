@@ -37,40 +37,52 @@ from typing import Iterable
 
 from data_expectations.internals.text import sql_like_to_regex
 
-try:
-    # added 3.9
-    from functools import cache
-except ImportError:  # pragma: no cover
-    from functools import lru_cache
-
-    cache = lru_cache(1)
+GLOBAL_TRACKER = {}
 
 
-@cache
-def all_expectations():
-    """
-    Programatically get the list of expectations and build them into a dictionary.
-    We then use this dictionary to look up the methods to test the expectations in
-    the set of expectations for a dataset.
-    """
-    expectations = {}
-    for handle, member in getmembers(Expectations(None)):
-        if callable(member) and handle.startswith("expect_"):
-            expectations[handle] = member
-    return expectations
+def track_previous(func):
+    def wrapper(*args, **kwargs):
+        column = kwargs.get("column")
+        key = f"{func.__name__}/{str(column)}"
+        if "previous_value" in kwargs:
+            previous_value = kwargs.pop("previous_value")
+        else:
+            previous_value = GLOBAL_TRACKER.get(key)
+        result = func(previous_value=previous_value, *args, **kwargs)
+        GLOBAL_TRACKER[key] = kwargs.get("row", {}).get(column) or previous_value
+        return result
+
+    return wrapper
 
 
 class Expectations:
     def __init__(self, set_of_expectations: Iterable[dict]):
         self.set_of_expectations = set_of_expectations
-        self._tracker: dict = {}
+
+    @classmethod
+    def all_expectations(cls):
+        """
+        Programmatically get the list of expectations and build them into a dictionary.
+        We then use this dictionary to look up the methods to test the expectations in
+        the set of expectations for a dataset.
+        """
+        expectations = {}
+        for handle, member in getmembers(cls):
+            if callable(member) and handle.startswith("expect_"):
+                expectations[handle] = member
+        return expectations
+
+    @staticmethod
+    def reset():
+        global GLOBAL_TRACKER
+        GLOBAL_TRACKER = {}
 
     ###################################################################################
     # COLUMN EXPECTATIONS
     ###################################################################################
 
+    @staticmethod
     def expect_column_names_to_match_set(
-        self,
         *,
         row: dict,
         columns: list,
@@ -78,53 +90,69 @@ class Expectations:
         **kwargs,
     ):
         """
-        Confirms that the columns in a record matches a given set.
+        Confirms that the columns in a record match the given set.
 
-        Ignore_excess, ignore columns not on the list, set to False to test against a
-        fixed set.
+        Parameters:
+            row: dict
+                The record to be checked.
+            columns: list
+                List of expected column names.
+            ignore_excess: bool
+                If True, ignores columns not in the list. If False, ensures columns match the list exactly.
+
+        Returns: bool
+            True if expectation is met, False otherwise.
         """
         if ignore_excess:
             return all(key in columns for key in row.keys())
         return sorted(columns) == sorted(list(row.keys()))
 
+    @staticmethod
     def expect_column_to_exist(
-        self,
         *,
         row: dict,
         column: str,
         **kwargs,
     ):
         """
-        Confirms that a named column exists.
+        Confirms that a specified column exists in the record.
 
-        Paramters:
-            row: dictionary
-                The dictionary to be tested
-            column: string
-                The name of the column we expect to exist
+        Parameters:
+            row: dict
+                The record to be checked.
+            column: str
+                Name of the column to check for existence.
 
-        Returns:
-            True if the expectation is met
+        Returns: bool
+            True if column exists, False otherwise.
         """
         if isinstance(row, dict):
             return column in row.keys()
         return False
 
+    @staticmethod
     def expect_column_values_to_not_be_null(
-        self,
         *,
         row: dict,
         column: str,
         **kwargs,
     ):
         """
-        Confirms the value in a column is not null, note that non-existant values
-        are considered to be null.
+        Confirms that the value in a column is not null. Non-existent values are considered null.
+
+        Parameters:
+            row: dict
+                The record containing the column.
+            column: str
+                The column's name whose value should not be null.
+
+        Returns: bool
+            True if the value in the column is not null, False otherwise.
         """
         return row.get(column) is not None
 
+    @staticmethod
     def expect_column_values_to_be_of_type(
-        self,
         *,
         row: dict,
         column: str,
@@ -132,13 +160,29 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column is of the expected type.
+
+        Parameters:
+            row: dict
+                The record to be checked.
+            column: str
+                The column's name to validate the type of its value.
+            expected_type:
+                Expected type of the column value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the type matches or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return type(value).__name__ == expected_type
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_be_in_type_list(
-        self,
         *,
         row: dict,
         column: str,
@@ -146,13 +190,29 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the type of value in a specific column is one of the specified types.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate the type of its value.
+            type_list: Iterable
+                List of expected types for the column value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the type is in the type list or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return type(value).__name__ in type_list
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_be_between(
-        self,
         *,
         row: dict,
         column: str,
@@ -161,45 +221,93 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column is between two values.
+
+        Parameters:
+            row: dict
+                The record to check.
+            column: str
+                The column's name to validate its value.
+            minimum:
+                Lower bound of the value.
+            maximum:
+                Upper bound of the value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the value is between the two bounds or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return value >= minimum and value <= maximum
         return ignore_nulls
 
+    @staticmethod
+    @track_previous
     def expect_column_values_to_be_increasing(
-        self,
         *,
         row: dict,
         column: str,
         ignore_nulls: bool = True,
+        previous_value=None,
         **kwargs,
     ):
+        """
+        Confirms that the values in a specific column are in an increasing order.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+            previous_value: [type]
+                The value of the column from the previous record.
+
+        Returns: bool
+            True if the current value is greater than or equal to the previous value or if the value is null and ignore_nulls is True. False otherwise.
+        """
         value = row.get(column)
         if value:
-            key = f"expect_column_values_to_be_increasing/{str(column)}"
-            last_value = self._tracker.get(key)
-            self._tracker[key] = value
-            return last_value is None or last_value <= value
+            return previous_value is None or previous_value <= value
         return ignore_nulls
 
+    @staticmethod
+    @track_previous
     def expect_column_values_to_be_decreasing(
-        self,
         *,
         row: dict,
         column: str,
         ignore_nulls: bool = True,
+        previous_value=None,
         **kwargs,
     ):
+        """
+        Confirms that the values in a specific column are in a decreasing order.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+            previous_value: [type]
+                The value of the column from the previous record.
+
+        Returns: bool
+            True if the current value is less than or equal to the previous value or if the value is null and ignore_nulls is True. False otherwise.
+        """
         value = row.get(column)
         if value:
-            key = f"expect_column_values_to_be_decreasing/{str(column)}"
-            last_value = self._tracker.get(key)
-            self._tracker[key] = value
-            return last_value is None or last_value >= value
+            return previous_value is None or previous_value >= value
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_be_in_set(
-        self,
         *,
         row: dict,
         column: str,
@@ -207,13 +315,29 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column is within a predefined set.
+
+        Parameters:
+            row: dict
+                The record to check.
+            column: str
+                The column's name to validate its value.
+            symbols: Iterable
+                The set of allowed values for the column.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the value is in the provided set or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return value in symbols
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_match_regex(
-        self,
         *,
         row: dict,
         column: str,
@@ -221,13 +345,29 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column matches a given regular expression pattern.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value.
+            regex: str
+                The regular expression pattern to match against the column's value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the value matches the regex or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return re.compile(regex).match(str(value)) is not None
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_match_like(
-        self,
         *,
         row: dict,
         column: str,
@@ -235,13 +375,29 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column matches a given SQL-like pattern.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value.
+            like: str
+                The SQL-like pattern to match against the column's value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the value matches the pattern or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return sql_like_to_regex(like).match(str(value)) is not None
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_length_to_be(
-        self,
         *,
         row: dict,
         column: str,
@@ -249,7 +405,22 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
-        """Confirms the string length of the value in a column is a given length"""
+        """
+        Confirms that the length of the value in a specific column is equal to a specified length.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value length.
+            length: int
+                The expected length for the column's value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the length of the value matches the specified length or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             if not hasattr(value, "__len__"):
@@ -257,8 +428,8 @@ class Expectations:
             return len(value) == length
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_length_to_be_between(
-        self,
         *,
         row: dict,
         column: str,
@@ -267,6 +438,24 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the length of the value in a specific column falls within a specified range.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value length.
+            minimum: int
+                The minimum acceptable length for the column's value.
+            maximum: int
+                The maximum acceptable length for the column's value.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the length of the value is within the specified range or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             if not hasattr(value, "__len__"):
@@ -274,8 +463,8 @@ class Expectations:
             return len(value) >= minimum and len(value) <= maximum
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_be_more_than(
-        self,
         *,
         row: dict,
         column: str,
@@ -283,13 +472,29 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column is greater than a given threshold.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value.
+            threshold: [type]
+                The minimum acceptable value for the column.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the value is greater than the threshold or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return value > threshold
         return ignore_nulls
 
+    @staticmethod
     def expect_column_values_to_be_less_than(
-        self,
         *,
         row: dict,
         column: str,
@@ -297,6 +502,22 @@ class Expectations:
         ignore_nulls: bool = True,
         **kwargs,
     ):
+        """
+        Confirms that the value in a specific column is less than a given threshold.
+
+        Parameters:
+            row: dict
+                The record to validate.
+            column: str
+                The column's name to validate its value.
+            threshold: [type]
+                The maximum acceptable value for the column.
+            ignore_nulls: bool
+                If True, null values will not cause the expectation to fail.
+
+        Returns: bool
+            True if the value is less than the threshold or if the value is null and ignore_nulls is True, False otherwise.
+        """
         value = row.get(column)
         if value:
             return value < threshold

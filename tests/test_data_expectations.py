@@ -1,17 +1,15 @@
 import datetime
 import os
 import sys
+
 import pytest
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-import data_expectations as de
-from data_expectations.errors import (
-    ExpectationNotMetError,
-    ExpectationNotUnderstoodError,
-)
-from rich import traceback
 
-traceback.install()
+import data_expectations as de
+from data_expectations.errors import ExpectationNotMetError
+from data_expectations.errors import ExpectationNotUnderstoodError
+
 
 # fmt:off
 set_of_expectations = [

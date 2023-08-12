@@ -5,10 +5,8 @@ import os
 import sys
 
 sys.path.insert(1, os.path.join(sys.path[0], ".."))
-import data_expectations as de
-from rich import traceback
 
-traceback.install()
+import data_expectations as de
 
 
 # fmt:off
@@ -22,7 +20,7 @@ DATA = [
 
 
 def test_expect_column_to_exist():
-    test_func = de.Expectations([]).expect_column_to_exist
+    test_func = de.Expectations.expect_column_to_exist
 
     assert not test_func(row='{"number":1}', column="number")
 
