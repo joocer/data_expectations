@@ -41,7 +41,6 @@ from typing import Iterable
 from typing import List
 from typing import Union
 
-from data_expectations.internals.models import ColumnExpectation
 from data_expectations.internals.models import Expectation
 from data_expectations.internals.text import sql_like_to_regex
 
@@ -70,12 +69,9 @@ class Expectations:
             if isinstance(exp, str):  # Parse JSON string
                 exp = json.loads(exp)
 
-            if isinstance(exp, dict):  # Convert dict to Expectation or ColumnExpectation
-                if "column" in exp:
-                    self.set_of_expectations.append(ColumnExpectation.load(exp))
-                else:
-                    self.set_of_expectations.append(Expectation.load(exp))
-            elif is_dataclass(exp) and (isinstance(exp, Expectation) or isinstance(exp, ColumnExpectation)):
+            if isinstance(exp, dict):  # Convert dict to Expectation
+                self.set_of_expectations.append(Expectation.load(exp))
+            elif is_dataclass(exp) and isinstance(exp, Expectation):
                 self.set_of_expectations.append(exp)
 
     @classmethod
@@ -99,32 +95,6 @@ class Expectations:
     ###################################################################################
     # COLUMN EXPECTATIONS
     ###################################################################################
-
-    @staticmethod
-    def expect_column_names_to_match_set(
-        *,
-        row: dict,
-        columns: list,
-        ignore_excess: bool = True,
-        **kwargs,
-    ):
-        """
-        Confirms that the columns in a record match the given set.
-
-        Parameters:
-            row: dict
-                The record to be checked.
-            columns: list
-                List of expected column names.
-            ignore_excess: bool
-                If True, ignores columns not in the list. If False, ensures columns match the list exactly.
-
-        Returns: bool
-            True if expectation is met, False otherwise.
-        """
-        if ignore_excess:
-            return all(key in columns for key in row.keys())
-        return sorted(columns) == sorted(list(row.keys()))
 
     @staticmethod
     def expect_column_to_exist(

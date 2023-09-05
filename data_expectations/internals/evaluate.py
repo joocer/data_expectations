@@ -12,7 +12,6 @@
 
 import typing
 
-from data_expectations import ColumnExpectation
 from data_expectations import Expectations
 from data_expectations.errors import ExpectationNotMetError
 from data_expectations.errors import ExpectationNotUnderstoodError
@@ -40,11 +39,7 @@ def evaluate_record(expectations: Expectations, record: dict, suppress_errors: b
         if expectation not in ALL_EXPECTATIONS:
             raise ExpectationNotUnderstoodError(expectation=expectation)
 
-        base_config = {"row": record, **expectation_definition.config}
-
-        # Conditionally include the 'column' parameter
-        if isinstance(expectation_definition, ColumnExpectation):
-            base_config["column"] = expectation_definition.column
+        base_config = {"row": record, "column": expectation_definition.column, **expectation_definition.config}
 
         if not ALL_EXPECTATIONS[expectation](**base_config):
             if not suppress_errors:
