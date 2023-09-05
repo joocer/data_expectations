@@ -19,7 +19,7 @@ class Expectation:
     @classmethod
     def load(cls: Type["Expectation"], serialized: Union[Dict[str, Any], str]) -> "Expectation":
         if isinstance(serialized, str):
-            serialized = json.loads(serialized)
+            serialized = dict(json.loads(serialized))
 
         serialized_copy: dict = deepcopy(serialized)
 
@@ -43,7 +43,7 @@ class ColumnExpectation(Expectation):
     @classmethod
     def load(cls: Type["ColumnExpectation"], serialized: Union[Dict[str, Any], str]) -> "ColumnExpectation":
         if isinstance(serialized, str):
-            serialized = json.loads(serialized)
+            serialized = dict(json.loads(serialized))
 
         serialized_copy: dict = deepcopy(serialized)
 
