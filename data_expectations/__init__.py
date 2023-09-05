@@ -1,4 +1,5 @@
-from .internals.expectations import Expectations
+from data_expectations.internals.expectations import Expectations
+from data_expectations.internals.models import Expectation, ColumnExpectation
 
-from .internals.evaluate import evaluate_list
-from .internals.evaluate import evaluate_record
+from data_expectations.internals.evaluate import evaluate_list
+from data_expectations.internals.evaluate import evaluate_record

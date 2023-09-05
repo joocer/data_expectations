@@ -12,6 +12,7 @@
 
 import typing
 
+from data_expectations import ColumnExpectation
 from data_expectations import Expectations
 from data_expectations.errors import ExpectationNotMetError
 from data_expectations.errors import ExpectationNotUnderstoodError
@@ -19,7 +20,7 @@ from data_expectations.errors import ExpectationNotUnderstoodError
 ALL_EXPECTATIONS = Expectations.all_expectations()
 
 
-def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
+def evaluate_record(expectations: Expectations, record: dict, suppress_errors: bool = False) -> bool:
     """
     Test a single record against a defined set of expectations.
 
@@ -34,12 +35,18 @@ def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
     """
     for expectation_definition in expectations.set_of_expectations:
         # get the name of the expectation
-        expectation = expectation_definition["expectation"]
+        expectation = expectation_definition.expectation
 
         if expectation not in ALL_EXPECTATIONS:
             raise ExpectationNotUnderstoodError(expectation=expectation)
 
-        if not ALL_EXPECTATIONS[expectation](row=record, **expectation_definition):
+        base_config = {"row": record, **expectation_definition.config}
+
+        # Conditionally include the 'column' parameter
+        if isinstance(expectation_definition, ColumnExpectation):
+            base_config["column"] = expectation_definition.column
+
+        if not ALL_EXPECTATIONS[expectation](**base_config):
             if not suppress_errors:
                 raise ExpectationNotMetError(expectation, record)
             return False  # data failed to meet expectation
@@ -47,7 +54,7 @@ def evaluate_record(expectations, record: dict, suppress_errors: bool = False):
     return True
 
 
-def evaluate_list(expectations, dictset: typing.Iterable[dict], suppress_errors: bool = False):
+def evaluate_list(expectations: Expectations, dictset: typing.Iterable[dict], suppress_errors: bool = False) -> bool:
     """
     Evaluate a set of records against a defined set of Expectations.
 
