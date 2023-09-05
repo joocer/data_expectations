@@ -43,6 +43,9 @@ def test_column_expectation_load_missing_key():
     serialized = {"expectation": "test_expectation", "some_key": "some_value"}
     with pytest.raises(ValueError):
         Expectation.load(serialized)
+    serialized = {"column": "column"}
+    with pytest.raises(ValueError):
+        Expectation.load(serialized)
 
 
 if __name__ == "__main__":  # pragma: no cover
