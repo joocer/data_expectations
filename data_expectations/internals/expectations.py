@@ -31,12 +31,18 @@ of all of the values in a table.
 
 - if data doesn't match, I'm not cross, I'm just disappointed.
 """
+import json
 import re
+from dataclasses import is_dataclass
 from inspect import getmembers
 from typing import Any
 from typing import Dict
 from typing import Iterable
+from typing import List
+from typing import Union
 
+from data_expectations.internals.models import ColumnExpectation
+from data_expectations.internals.models import Expectation
 from data_expectations.internals.text import sql_like_to_regex
 
 GLOBAL_TRACKER: Dict[str, Any] = {}
@@ -58,8 +64,19 @@ def track_previous(func):
 
 
 class Expectations:
-    def __init__(self, set_of_expectations: Iterable[dict]):
-        self.set_of_expectations = set_of_expectations
+    def __init__(self, set_of_expectations: Iterable[Union[str, dict, Expectation]]):
+        self.set_of_expectations: List[Expectation] = []
+        for exp in set_of_expectations:
+            if isinstance(exp, str):  # Parse JSON string
+                exp = json.loads(exp)
+
+            if isinstance(exp, dict):  # Convert dict to Expectation or ColumnExpectation
+                if "column" in exp:
+                    self.set_of_expectations.append(ColumnExpectation.load(exp))
+                else:
+                    self.set_of_expectations.append(Expectation.load(exp))
+            elif is_dataclass(exp) and (isinstance(exp, Expectation) or isinstance(exp, ColumnExpectation)):
+                self.set_of_expectations.append(exp)
 
     @classmethod
     def all_expectations(cls):

@@ -22,7 +22,7 @@ jobs:
           pip install -r $GITHUB_WORKSPACE/tests/requirements.txt
 
       - name: Run Regression Tests
-        run: coverage run -m pytest 
+        run: coverage run -m pytest --color=yes
 
       - name: Check Coverage
         run: coverage report --include=data_expectations/** --fail-under=95 -m
