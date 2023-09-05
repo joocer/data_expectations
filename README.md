@@ -23,7 +23,6 @@ Expectations can be used alongside, or in place of a schema validator, however E
 ## Provided Expectations
 
 - **expect_column_to_exist** (column)
-- **expect_column_names_to_match_set** (columns, ignore_excess:true)
 - **expect_column_values_to_not_be_null** (column)
 - **expect_column_values_to_be_of_type** (column, expected_type, ignore_nulls:true)
 - **expect_column_values_to_be_in_type_list** (column, type_list, ignore_nulls:true)
@@ -50,18 +49,20 @@ Data Expectations has no external dependencies, can be used ad hoc and in-the-mo
 
 ~~~python
 import data_expectations as de
+from data_expectations import Expectation
+from data_expectations import Behaviors
 
-TEST_DATA = {"name":"charles","age":12}
+TEST_DATA = {"name": "charles", "age": 12}
 
 set_of_expectations = [
-    {"expectation": "expect_column_to_exist", "column": "name"},
-    {"expectation": "expect_column_to_exist", "column": "age"},
-    {"expectation": "expect_column_values_to_be_between", "column": "age", "minimum": 0, "maximum": 120},
+    Expectation(Behaviors.EXPECT_COLUMN_TO_EXIST, column="name"),
+    Expectation(Behaviors.EXPECT_COLUMN_TO_EXIST, column="age"),
+    Expectation(Behaviors.EXPECT_COLUMN_VALUES_TO_BE_BETWEEN, column="age", config={"minimum": 0, "maximum": 120}),
 ]
 
 expectations = de.Expectations(set_of_expectations)
 try:
     de.evaluate_record(expectations, TEST_DATA)
-except de.errors.ExpectationNotMetError:
+except de.errors.ExpectationNotMetError:  # pragma: no cover
     print("Data Didn't Meet Expectations")
 ~~~
