@@ -21,7 +21,7 @@ class Expectation:
         if isinstance(serialized, str):
             serialized = json.loads(serialized)
 
-        serialized_copy = deepcopy(serialized)
+        serialized_copy: dict = deepcopy(serialized)
 
         if "expectation" not in serialized_copy:
             raise ValueError("Missing 'expectation' key in Expectation." + str(serialized_copy))
@@ -45,7 +45,7 @@ class ColumnExpectation(Expectation):
         if isinstance(serialized, str):
             serialized = json.loads(serialized)
 
-        serialized_copy = deepcopy(serialized)
+        serialized_copy: dict = deepcopy(serialized)
 
         if "expectation" not in serialized_copy:
             raise ValueError("Missing 'expectation' key in Expectation")
