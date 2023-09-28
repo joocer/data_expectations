@@ -39,7 +39,7 @@ Expectations can be used alongside, or in place of a schema validator, however E
 - **expect_column_values_to_be_in_set** (column, symbols, ignore_nulls:true)
 - **expect_column_values_to_match_regex** (column, regex, ignore_nulls:true)
 - **expect_column_values_to_match_like** (column, like, ignore_nulls:true)
-- **expect_column_values_length_to_be_be** (column, length, ignore_nulls:true)
+- **expect_column_values_length_to_be** (column, length, ignore_nulls:true)
 - **expect_column_values_length_to_be_between**  (column, maximum, minimum, ignore_nulls:true)
 
 ## Install
