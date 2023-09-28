@@ -39,7 +39,7 @@ Expectations can be used alongside, or in place of a schema validator, however E
 - **expect_column_values_to_be_in_set** (column, symbols, ignore_nulls:true)
 - **expect_column_values_to_match_regex** (column, regex, ignore_nulls:true)
 - **expect_column_values_to_match_like** (column, like, ignore_nulls:true)
-- **expect_column_values_length_to_be_be** (column, length, ignore_nulls:true)
+- **expect_column_values_length_to_be** (column, length, ignore_nulls:true)
 - **expect_column_values_length_to_be_between**  (column, maximum, minimum, ignore_nulls:true)
 
 ## Install
@@ -51,6 +51,8 @@ pip install data_expectations
 Data Expectations has no external dependencies, can be used ad hoc and in-the-moment without complex set up.
 
 ## Example Usage
+
+Testing Python Dictionaries
 
 ~~~python
 import data_expectations as de
@@ -68,6 +70,21 @@ set_of_expectations = [
 expectations = de.Expectations(set_of_expectations)
 try:
     de.evaluate_record(expectations, TEST_DATA)
+except de.errors.ExpectationNotMetError:  # pragma: no cover
+    print("Data Didn't Meet Expectations")
+~~~
+
+Testing individual Values:
+
+~~~python
+import data_expectations as de
+from data_expectations import Expectation
+from data_expectations import Behaviors
+
+expectation = Expectation(Behaviors.EXPECT_COLUMN_VALUES_TO_BE_BETWEEN, column="age", config={"minimum": 0, "maximum": 120})
+
+try:
+    expectation.test_value(55)
 except de.errors.ExpectationNotMetError:  # pragma: no cover
     print("Data Didn't Meet Expectations")
 ~~~
