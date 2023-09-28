@@ -166,7 +166,7 @@ class Expectations:
             True if the type matches or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return type(value).__name__ == expected_type
         return ignore_nulls
 
@@ -196,7 +196,7 @@ class Expectations:
             True if the type is in the type list or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return type(value).__name__ in type_list
         return ignore_nulls
 
@@ -229,7 +229,7 @@ class Expectations:
             True if the value is between the two bounds or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return value >= minimum and value <= maximum
         return ignore_nulls
 
@@ -260,7 +260,7 @@ class Expectations:
             True if the current value is greater than or equal to the previous value or if the value is null and ignore_nulls is True. False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return previous_value is None or previous_value <= value
         return ignore_nulls
 
@@ -291,7 +291,7 @@ class Expectations:
             True if the current value is less than or equal to the previous value or if the value is null and ignore_nulls is True. False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return previous_value is None or previous_value >= value
         return ignore_nulls
 
@@ -321,7 +321,7 @@ class Expectations:
             True if the value is in the provided set or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return value in symbols
         return ignore_nulls
 
@@ -351,7 +351,7 @@ class Expectations:
             True if the value matches the regex or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return re.compile(regex).match(str(value)) is not None
         return ignore_nulls
 
@@ -381,7 +381,7 @@ class Expectations:
             True if the value matches the pattern or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return sql_like_to_regex(like).match(str(value)) is not None
         return ignore_nulls
 
@@ -411,7 +411,7 @@ class Expectations:
             True if the length of the value matches the specified length or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             if not hasattr(value, "__len__"):
                 value = str(value)
             return len(value) == length
@@ -446,7 +446,7 @@ class Expectations:
             True if the length of the value is within the specified range or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             if not hasattr(value, "__len__"):
                 value = str(value)
             return len(value) >= minimum and len(value) <= maximum
@@ -478,7 +478,7 @@ class Expectations:
             True if the value is greater than the threshold or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return value > threshold
         return ignore_nulls
 
@@ -508,6 +508,6 @@ class Expectations:
             True if the value is less than the threshold or if the value is null and ignore_nulls is True, False otherwise.
         """
         value = row.get(column)
-        if value:
+        if value is not None:
             return value < threshold
         return ignore_nulls

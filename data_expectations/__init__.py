@@ -14,7 +14,7 @@ class Behaviors(str, Enum):
     EXPECT_COLUMN_VALUES_TO_BE_IN_SET = "expect_column_values_to_be_in_set"
     EXPECT_COLUMN_VALUES_TO_MATCH_REGEX = "expect_column_values_to_match_regex"
     EXPECT_COLUMN_VALUES_TO_MATCH_LIKE = "expect_column_values_to_match_like"
-    EXPECT_COLUMN_VALUES_LENGTH_TO_BE_BE = "expect_column_values_length_to_be_be"
+    EXPECT_COLUMN_VALUES_LENGTH_TO_BE = "expect_column_values_length_to_be"
     EXPECT_COLUMN_VALUES_LENGTH_TO_BE_BETWEEN = "expect_column_values_length_to_be_between"
 
 

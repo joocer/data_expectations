@@ -52,6 +52,8 @@ Data Expectations has no external dependencies, can be used ad hoc and in-the-mo
 
 ## Example Usage
 
+Testing Python Dictionaries
+
 ~~~python
 import data_expectations as de
 from data_expectations import Expectation
@@ -68,6 +70,21 @@ set_of_expectations = [
 expectations = de.Expectations(set_of_expectations)
 try:
     de.evaluate_record(expectations, TEST_DATA)
+except de.errors.ExpectationNotMetError:  # pragma: no cover
+    print("Data Didn't Meet Expectations")
+~~~
+
+Testing individual Values:
+
+~~~python
+import data_expectations as de
+from data_expectations import Expectation
+from data_expectations import Behaviors
+
+expectation = Expectation(Behaviors.EXPECT_COLUMN_VALUES_TO_BE_BETWEEN, column="age", config={"minimum": 0, "maximum": 120})
+
+try:
+    expectation.test_value(55)
 except de.errors.ExpectationNotMetError:  # pragma: no cover
     print("Data Didn't Meet Expectations")
 ~~~

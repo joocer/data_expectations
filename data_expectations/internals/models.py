@@ -19,6 +19,7 @@ from typing import Type
 from typing import Union
 
 from data_expectations import Behaviors
+from data_expectations.errors import ExpectationNotUnderstoodError
 
 
 @dataclass
@@ -69,3 +70,18 @@ class Expectation:
         ignore_nulls = serialized_copy.pop("ignore_nulls", True)
         config = serialized_copy
         return cls(expectation=expectation, column=column, ignore_nulls=ignore_nulls, config=config)
+
+    def test_value(self, value: Any):
+        """
+        Test a single value against this expectation.
+
+        Parameters:
+            value: Any
+                The value to be tested.
+        """
+        from data_expectations import Expectations
+
+        test_logic = Expectations.all_expectations().get(self.expectation.value, None)
+        if not test_logic:
+            raise ExpectationNotUnderstoodError(expectation=self.expectation)
+        return test_logic(row={"value": value}, column="value", ignore_nulls=self.ignore_nulls, **self.config)

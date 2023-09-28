@@ -50,7 +50,23 @@ def test_example():
         print("Data Didn't Meet Expectations")
 
 
+def test_value_example():
+    import data_expectations as de
+    from data_expectations import Expectation
+    from data_expectations import Behaviors
+
+    expectation = Expectation(
+        Behaviors.EXPECT_COLUMN_VALUES_TO_BE_BETWEEN, column="age", config={"minimum": 0, "maximum": 120}
+    )
+
+    try:
+        expectation.test_value(55)
+    except de.errors.ExpectationNotMetError:  # pragma: no cover
+        print("Data Didn't Meet Expectations")
+
+
 if __name__ == "__main__":  # pragma: no cover
     test_example()
     test_example_legacy()
+    test_value_example()
     print("✅ okay")
