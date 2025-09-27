@@ -39,7 +39,16 @@ from typing import Any
 from typing import Dict
 from typing import Iterable
 from typing import List
+from typing import Optional
 from typing import Union
+
+try:
+    # added 3.9
+    from functools import cache
+except ImportError:  # pragma: no cover
+    from functools import lru_cache
+
+    cache = lru_cache(maxsize=1)
 
 from data_expectations.internals.models import Expectation
 from data_expectations.internals.text import sql_like_to_regex
@@ -63,23 +72,52 @@ def track_previous(func):
 
 
 class Expectations:
+    """
+    A collection of data expectations that can be evaluated against records.
+
+    This class manages a set of expectations and provides methods to evaluate
+    data records against those expectations.
+    """
+
     def __init__(self, set_of_expectations: Iterable[Union[str, dict, Expectation]]):
+        """
+        Initialize Expectations with a set of expectation definitions.
+
+        Args:
+            set_of_expectations: An iterable of expectation definitions that can be:
+                - JSON strings representing expectations
+                - Dictionaries with expectation configuration
+                - Expectation dataclass instances
+
+        Raises:
+            ValueError: If an expectation definition is invalid
+            json.JSONDecodeError: If a JSON string is malformed
+        """
         self.set_of_expectations: List[Expectation] = []
         for exp in set_of_expectations:
-            if isinstance(exp, str):  # Parse JSON string
-                exp = json.loads(exp)
+            try:
+                if isinstance(exp, str):  # Parse JSON string
+                    exp = json.loads(exp)
 
-            if isinstance(exp, dict):  # Convert dict to Expectation
-                self.set_of_expectations.append(Expectation.load(exp))
-            elif is_dataclass(exp) and isinstance(exp, Expectation):
-                self.set_of_expectations.append(exp)
+                if isinstance(exp, dict):  # Convert dict to Expectation
+                    self.set_of_expectations.append(Expectation.load(exp))
+                elif is_dataclass(exp) and isinstance(exp, Expectation):
+                    self.set_of_expectations.append(exp)
+                else:
+                    raise ValueError(f"Unsupported expectation type: {type(exp)}")
+            except (json.JSONDecodeError, ValueError) as e:
+                raise ValueError(f"Failed to parse expectation: {exp}. Error: {str(e)}") from e
 
     @classmethod
-    def all_expectations(cls):
+    @cache
+    def all_expectations(cls) -> Dict[str, Any]:
         """
         Programmatically get the list of expectations and build them into a dictionary.
         We then use this dictionary to look up the methods to test the expectations in
         the set of expectations for a dataset.
+
+        Returns:
+            Dict[str, Any]: Dictionary mapping expectation names to their callable methods.
         """
         expectations = {}
         for handle, member in getmembers(cls):
@@ -87,10 +125,62 @@ class Expectations:
                 expectations[handle] = member
         return expectations
 
+    @classmethod
+    def list_available_expectations(cls) -> List[str]:
+        """
+        Get a sorted list of all available expectation names.
+
+        Returns:
+            List[str]: Sorted list of expectation method names.
+        """
+        return sorted(cls.all_expectations().keys())
+
     @staticmethod
-    def reset():
+    def reset() -> None:
+        """
+        Reset the global tracker used for stateful expectations.
+
+        This should be called when starting evaluation of a new dataset
+        to clear any state from previous evaluations.
+        """
         global GLOBAL_TRACKER
         GLOBAL_TRACKER = {}
+
+    def validate_configuration(self) -> List[str]:
+        """
+        Validate all expectations in this set and return any issues found.
+
+        Returns:
+            List[str]: List of validation error messages. Empty if all valid.
+        """
+        # Import Behaviors locally to avoid circular imports
+        from data_expectations import Behaviors
+
+        errors = []
+        available_expectations = self.all_expectations()
+
+        for i, expectation in enumerate(self.set_of_expectations):
+            # Handle both Behaviors enum and string expectation names
+            expectation_name = expectation.expectation
+            if isinstance(expectation_name, Behaviors):
+                expectation_name = expectation_name.value
+
+            if expectation_name not in available_expectations:
+                errors.append(f"Expectation {i}: Unknown expectation '{expectation_name}'")
+
+            # Basic parameter validation
+            if not expectation.column:
+                errors.append(f"Expectation {i}: Column name cannot be empty")
+
+        return errors
+
+    def __len__(self) -> int:
+        """Return the number of expectations in this set."""
+        return len(self.set_of_expectations)
+
+    def __iter__(self):
+        """Allow iteration over expectations."""
+        return iter(self.set_of_expectations)
 
     ###################################################################################
     # COLUMN EXPECTATIONS
@@ -99,76 +189,83 @@ class Expectations:
     @staticmethod
     def expect_column_to_exist(
         *,
-        row: dict,
+        row: Dict[str, Any],
         column: str,
         **kwargs,
-    ):
+    ) -> bool:
         """
         Confirms that a specified column exists in the record.
 
-        Parameters:
-            row: dict
-                The record to be checked.
-            column: str
-                Name of the column to check for existence.
+        Args:
+            row: The record to be checked.
+            column: Name of the column to check for existence.
+            **kwargs: Additional parameters (ignored).
 
-        Returns: bool
+        Returns:
             True if column exists, False otherwise.
+
+        Example:
+            >>> expect_column_to_exist(row={"name": "Alice"}, column="name")
+            True
         """
-        if isinstance(row, dict):
-            return column in row.keys()
-        return False
+        if not isinstance(row, dict):
+            return False
+        return column in row
 
     @staticmethod
     def expect_column_values_to_not_be_null(
         *,
-        row: dict,
+        row: Dict[str, Any],
         column: str,
         **kwargs,
-    ):
+    ) -> bool:
         """
         Confirms that the value in a column is not null. Non-existent values are considered null.
 
-        Parameters:
-            row: dict
-                The record containing the column.
-            column: str
-                The column's name whose value should not be null.
+        Args:
+            row: The record containing the column.
+            column: The column's name whose value should not be null.
+            **kwargs: Additional parameters (ignored).
 
-        Returns: bool
+        Returns:
             True if the value in the column is not null, False otherwise.
+
+        Example:
+            >>> expect_column_values_to_not_be_null(row={"name": "Alice"}, column="name")
+            True
         """
         return row.get(column) is not None
 
     @staticmethod
     def expect_column_values_to_be_of_type(
         *,
-        row: dict,
+        row: Dict[str, Any],
         column: str,
-        expected_type,
+        expected_type: str,
         ignore_nulls: bool = True,
         **kwargs,
-    ):
+    ) -> bool:
         """
         Confirms that the value in a specific column is of the expected type.
 
-        Parameters:
-            row: dict
-                The record to be checked.
-            column: str
-                The column's name to validate the type of its value.
-            expected_type:
-                Expected type of the column value.
-            ignore_nulls: bool
-                If True, null values will not cause the expectation to fail.
+        Args:
+            row: The record to be checked.
+            column: The column's name to validate the type of its value.
+            expected_type: Expected type name (e.g., 'str', 'int', 'float', 'bool').
+            ignore_nulls: If True, null values will not cause the expectation to fail.
+            **kwargs: Additional parameters (ignored).
 
-        Returns: bool
+        Returns:
             True if the type matches or if the value is null and ignore_nulls is True, False otherwise.
+
+        Example:
+            >>> expect_column_values_to_be_of_type(row={"age": 25}, column="age", expected_type="int")
+            True
         """
         value = row.get(column)
-        if value is not None:
-            return type(value).__name__ == expected_type
-        return ignore_nulls
+        if value is None:
+            return ignore_nulls
+        return type(value).__name__ == expected_type
 
     @staticmethod
     def expect_column_values_to_be_in_type_list(
