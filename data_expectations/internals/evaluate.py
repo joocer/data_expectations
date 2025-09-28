@@ -10,12 +10,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import typing
-from typing import Dict, Any
+from typing import Any
+from typing import Dict
 
-from data_expectations import Expectations
 from data_expectations import Behaviors
+from data_expectations import Expectations
 from data_expectations.errors import ExpectationNotMetError
 from data_expectations.errors import ExpectationNotUnderstoodError
 

@@ -39,8 +39,10 @@ from typing import Any
 from typing import Dict
 from typing import Iterable
 from typing import List
-from typing import Optional
 from typing import Union
+
+from data_expectations.internals.models import Expectation
+from data_expectations.internals.text import sql_like_to_regex
 
 try:
     # added 3.9
@@ -50,8 +52,6 @@ except ImportError:  # pragma: no cover
 
     cache = lru_cache(maxsize=1)
 
-from data_expectations.internals.models import Expectation
-from data_expectations.internals.text import sql_like_to_regex
 
 GLOBAL_TRACKER: Dict[str, Any] = {}
 
