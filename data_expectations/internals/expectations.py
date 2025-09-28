@@ -161,7 +161,7 @@ class Expectations:
 
         for i, expectation in enumerate(self.set_of_expectations):
             # Handle both Behaviors enum and string expectation names
-            expectation_name = expectation.expectation
+            expectation_name:Any = expectation.expectation
             if isinstance(expectation_name, Behaviors):
                 expectation_name = expectation_name.value
 
